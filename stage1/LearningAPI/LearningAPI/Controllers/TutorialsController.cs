@@ -60,7 +60,15 @@ namespace LearningAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tutorial).State = EntityState.Modified;
+            var savedTutorial = await _context.Tutorials.FindAsync(id);
+            if (savedTutorial == null)
+            {
+                return NotFound();
+            }
+            savedTutorial.Title = tutorial.Title;
+            savedTutorial.Description = tutorial.Description;
+            savedTutorial.UpdatedAt = DateTime.Now;
+            _context.Tutorials.Update(savedTutorial);
 
             try
             {
@@ -90,6 +98,11 @@ namespace LearningAPI.Controllers
             {
                 return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
             }
+
+            var now = DateTime.Now;
+            tutorial.CreatedAt = now;
+            tutorial.UpdatedAt = now;
+
             _context.Tutorials.Add(tutorial);
             await _context.SaveChangesAsync();
 
