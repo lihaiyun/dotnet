@@ -23,23 +23,29 @@ namespace LearningAPI.Controllers
 
         // GET: api/Tutorial
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials()
+        public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials(string? search)
         {
-          if (_context.Tutorials == null)
-          {
-              return NotFound();
-          }
-            return await _context.Tutorials.ToListAsync();
+            if (_context.Tutorials == null)
+            {
+                return NotFound();
+            }
+
+            IQueryable<Tutorial> result = _context.Tutorials;
+            if (search != null)
+            {
+                result = result.Where(x => x.Title.Contains(search) || x.Description.Contains(search));
+            }
+            return await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
         }
 
         // GET: api/Tutorial/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tutorial>> GetTutorial(int id)
         {
-          if (_context.Tutorials == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tutorials == null)
+            {
+                return NotFound();
+            }
             var tutorial = await _context.Tutorials.FindAsync(id);
 
             if (tutorial == null)
@@ -60,7 +66,15 @@ namespace LearningAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tutorial).State = EntityState.Modified;
+            var savedTutorial = await _context.Tutorials.FindAsync(id);
+            if (savedTutorial == null)
+            {
+                return NotFound();
+            }
+            savedTutorial.Title = tutorial.Title;
+            savedTutorial.Description = tutorial.Description;
+            savedTutorial.UpdatedAt = DateTime.Now;
+            _context.Tutorials.Update(savedTutorial);
 
             try
             {
@@ -86,10 +100,15 @@ namespace LearningAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Tutorial>> PostTutorial(Tutorial tutorial)
         {
-          if (_context.Tutorials == null)
-          {
-              return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
-          }
+            if (_context.Tutorials == null)
+            {
+                return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
+            }
+
+            var now = DateTime.Now;
+            tutorial.CreatedAt = now;
+            tutorial.UpdatedAt = now;
+
             _context.Tutorials.Add(tutorial);
             await _context.SaveChangesAsync();
 
