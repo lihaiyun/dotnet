@@ -1,4 +1,6 @@
-﻿namespace LearningAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace LearningAPI.Models
 {
     public class User
     {
@@ -14,6 +16,7 @@
 
         public DateTime UpdatedAt { get; set; }
 
+        [JsonIgnore]
         public virtual List<Tutorial>? Tutorials { get; set; }
     }
 }
