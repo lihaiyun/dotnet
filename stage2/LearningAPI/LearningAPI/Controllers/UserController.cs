@@ -41,5 +41,35 @@ namespace LearningAPI.Controllers
             _context.SaveChanges();
             return Ok(user);
         }
+
+        // POST: api/User/login
+        [HttpPost("login")]
+        public IActionResult Login(LoginRequest request)
+        {
+            string message = "Email or password is not correct.";
+            var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+            if (foundUser == null)
+            {
+                return BadRequest(new { message });
+            }
+
+            bool verified = BCrypt.Net.BCrypt.Verify(request.Password, foundUser.Password);
+            if (!verified)
+            {
+                return BadRequest(new { message });
+            }
+
+            int id = foundUser.Id;
+            string email = foundUser.Email;
+            string name = foundUser.Name;
+            var user = new
+            {
+                id,
+                email,
+                name
+            };
+
+            return Ok(new { user });
+        }
     }
 }
