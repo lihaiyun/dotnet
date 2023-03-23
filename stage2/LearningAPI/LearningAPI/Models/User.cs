@@ -13,5 +13,7 @@
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+        public virtual List<Tutorial>? Tutorials { get; set; }
     }
 }
