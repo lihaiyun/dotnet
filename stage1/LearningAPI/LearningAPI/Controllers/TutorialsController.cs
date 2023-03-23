@@ -25,10 +25,10 @@ namespace LearningAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials()
         {
-          if (_context.Tutorials == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tutorials == null)
+            {
+                return NotFound();
+            }
             return await _context.Tutorials.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace LearningAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Tutorial>> GetTutorial(int id)
         {
-          if (_context.Tutorials == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tutorials == null)
+            {
+                return NotFound();
+            }
             var tutorial = await _context.Tutorials.FindAsync(id);
 
             if (tutorial == null)
@@ -86,10 +86,10 @@ namespace LearningAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Tutorial>> PostTutorial(Tutorial tutorial)
         {
-          if (_context.Tutorials == null)
-          {
-              return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
-          }
+            if (_context.Tutorials == null)
+            {
+                return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
+            }
             _context.Tutorials.Add(tutorial);
             await _context.SaveChangesAsync();
 
