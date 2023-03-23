@@ -23,13 +23,19 @@ namespace LearningAPI.Controllers
 
         // GET: api/Tutorials
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials()
+        public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials(string? search)
         {
             if (_context.Tutorials == null)
             {
                 return NotFound();
             }
-            return await _context.Tutorials.ToListAsync();
+
+            IQueryable<Tutorial> result = _context.Tutorials;
+            if (search != null)
+            {
+                result = result.Where(x => x.Title.Contains(search) || x.Description.Contains(search));
+            }
+            return await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
         }
 
         // GET: api/Tutorials/5
