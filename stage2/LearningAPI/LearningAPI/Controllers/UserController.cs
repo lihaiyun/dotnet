@@ -22,14 +22,17 @@ namespace LearningAPI.Controllers
             var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (foundUser != null)
             {
-                return BadRequest("Email already exists.");
+                string message = "Email already exists.";
+                return BadRequest(new { message });
             }
 
             var now = DateTime.Now;
-            var user = new User() {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = new User()
+            {
                 Name = request.Name,
                 Email = request.Email,
-                Password = request.Password,
+                Password = passwordHash,
                 CreatedAt = now,
                 UpdatedAt = now
             };
