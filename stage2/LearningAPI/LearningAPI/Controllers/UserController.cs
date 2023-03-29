@@ -19,6 +19,10 @@ namespace LearningAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
+            request.Name = request.Name.Trim();
+            request.Email = request.Email.Trim().ToLower();
+            request.Password = request.Password.Trim();
+
             var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (foundUser != null)
             {
@@ -46,6 +50,9 @@ namespace LearningAPI.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
+            request.Email = request.Email.Trim().ToLower();
+            request.Password = request.Password.Trim();
+
             string message = "Email or password is not correct.";
             var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (foundUser == null)
