@@ -6,10 +6,10 @@ namespace LearningAPI.Models
     {
         public int Id { get; set; }
 
-        [Required, MaxLength(100)]
+        [Required, MinLength(3), MaxLength(100)]
         public string Title { get; set; } = string.Empty;
 
-        [Required, MaxLength(500)]
+        [Required, MinLength(3), MaxLength(500)]
         public string Description { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }

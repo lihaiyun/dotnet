@@ -71,8 +71,8 @@ namespace LearningAPI.Controllers
             {
                 return NotFound();
             }
-            savedTutorial.Title = tutorial.Title;
-            savedTutorial.Description = tutorial.Description;
+            savedTutorial.Title = tutorial.Title.Trim();
+            savedTutorial.Description = tutorial.Description.Trim();
             savedTutorial.UpdatedAt = DateTime.Now;
             _context.Tutorials.Update(savedTutorial);
 
@@ -105,6 +105,8 @@ namespace LearningAPI.Controllers
                 return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
             }
 
+            tutorial.Title = tutorial.Title.Trim();
+            tutorial.Description = tutorial.Description.Trim();
             var now = DateTime.Now;
             tutorial.CreatedAt = now;
             tutorial.UpdatedAt = now;
