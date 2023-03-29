@@ -23,6 +23,7 @@ namespace LearningAPI.Controllers
             request.Email = request.Email.Trim().ToLower();
             request.Password = request.Password.Trim();
 
+            // Check email
             var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (foundUser != null)
             {
@@ -30,6 +31,7 @@ namespace LearningAPI.Controllers
                 return BadRequest(new { message });
             }
 
+            // Create user object
             var now = DateTime.Now;
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = new User()
@@ -41,6 +43,7 @@ namespace LearningAPI.Controllers
                 UpdatedAt = now
             };
 
+            // Add user
             _context.Users.Add(user);
             _context.SaveChanges();
             return Ok(user);
@@ -53,6 +56,7 @@ namespace LearningAPI.Controllers
             request.Email = request.Email.Trim().ToLower();
             request.Password = request.Password.Trim();
 
+            // Check email and password
             string message = "Email or password is not correct.";
             var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (foundUser == null)
@@ -66,6 +70,7 @@ namespace LearningAPI.Controllers
                 return BadRequest(new { message });
             }
 
+            // Return user info
             int id = foundUser.Id;
             string email = foundUser.Email;
             string name = foundUser.Name;
@@ -75,7 +80,6 @@ namespace LearningAPI.Controllers
                 email,
                 name
             };
-
             return Ok(new { user });
         }
     }
