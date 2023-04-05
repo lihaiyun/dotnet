@@ -38,7 +38,7 @@ namespace LearningAPI.Controllers
             {
                 Name = request.Name,
                 Email = request.Email,
-                Password = passwordHash,
+                //Password = passwordHash,
                 CreatedAt = now,
                 UpdatedAt = now
             };
@@ -64,19 +64,19 @@ namespace LearningAPI.Controllers
                 return BadRequest(new { message });
             }
 
-            bool verified = BCrypt.Net.BCrypt.Verify(request.Password, foundUser.Password);
-            if (!verified)
-            {
-                return BadRequest(new { message });
-            }
+            //bool verified = BCrypt.Net.BCrypt.Verify(request.Password, foundUser.Password);
+            //if (!verified)
+            //{
+            //    return BadRequest(new { message });
+            //}
 
             // Return user info
-            int id = foundUser.Id;
+            //int id = foundUser.Id;
             string email = foundUser.Email;
             string name = foundUser.Name;
             var user = new
             {
-                id,
+                //id,
                 email,
                 name
             };

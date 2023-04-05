@@ -1,9 +1,10 @@
 ﻿using LearningAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningAPI
 {
-    public class MyDbContext : DbContext
+    public class MyDbContext : IdentityUserContext<User>
     {
         private readonly IConfiguration _configuration;
 
@@ -19,7 +20,5 @@ namespace LearningAPI
         }
 
         public DbSet<Tutorial> Tutorials { get; set; }
-
-        public DbSet<User> Users { get; set; }
     }
 }
