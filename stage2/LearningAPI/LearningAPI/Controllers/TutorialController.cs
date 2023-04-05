@@ -30,7 +30,7 @@ namespace LearningAPI.Controllers
                 return NotFound();
             }
 
-            IQueryable<Tutorial> result = _context.Tutorials;
+            IQueryable<Tutorial> result = _context.Tutorials.Include(x => x.User);
             if (search != null)
             {
                 result = result.Where(x => x.Title.Contains(search) || x.Description.Contains(search));
@@ -105,13 +105,15 @@ namespace LearningAPI.Controllers
                 return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
             }
 
-            tutorial.Title = tutorial.Title.Trim();
-            tutorial.Description = tutorial.Description.Trim();
             var now = DateTime.Now;
-            tutorial.CreatedAt = now;
-            tutorial.UpdatedAt = now;
-
-            _context.Tutorials.Add(tutorial);
+            var newTutorial = new Tutorial()
+            {
+                Title = tutorial.Title.Trim(),
+                Description = tutorial.Description.Trim(),
+                CreatedAt = now,
+                UpdatedAt = now
+            };
+            _context.Tutorials.Add(newTutorial);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTutorial", new { id = tutorial.Id }, tutorial);
