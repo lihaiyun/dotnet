@@ -66,16 +66,16 @@ namespace LearningAPI.Controllers
                 return BadRequest();
             }
 
-            var savedTutorial = await _context.Tutorials.FindAsync(id);
-            if (savedTutorial == null)
+            var myTutorial = await _context.Tutorials.FindAsync(id);
+            if (myTutorial == null)
             {
                 return NotFound();
             }
-            savedTutorial.Title = tutorial.Title.Trim();
-            savedTutorial.Description = tutorial.Description.Trim();
-            savedTutorial.UpdatedAt = DateTime.Now;
-            _context.Tutorials.Update(savedTutorial);
+            myTutorial.Title = tutorial.Title.Trim();
+            myTutorial.Description = tutorial.Description.Trim();
+            myTutorial.UpdatedAt = DateTime.Now;
 
+            _context.Tutorials.Update(myTutorial);
             try
             {
                 await _context.SaveChangesAsync();
@@ -106,17 +106,18 @@ namespace LearningAPI.Controllers
             }
 
             var now = DateTime.Now;
-            var newTutorial = new Tutorial()
+            var myTutorial = new Tutorial()
             {
                 Title = tutorial.Title.Trim(),
                 Description = tutorial.Description.Trim(),
                 CreatedAt = now,
                 UpdatedAt = now
             };
-            _context.Tutorials.Add(newTutorial);
+
+            _context.Tutorials.Add(myTutorial);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTutorial", new { id = tutorial.Id }, tutorial);
+            return CreatedAtAction("GetTutorial", new { id = myTutorial.Id }, myTutorial);
         }
 
         // DELETE: api/Tutorial/5
