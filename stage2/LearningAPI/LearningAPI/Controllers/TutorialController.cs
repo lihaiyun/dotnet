@@ -81,20 +81,27 @@ namespace LearningAPI.Controllers
         }
 
         // PUT: api/Tutorial/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTutorial(int id, Tutorial tutorial)
+        [HttpPut("{id}"), Authorize]
+        public IActionResult PutTutorial(int id, Tutorial tutorial)
         {
-            if (id != tutorial.Id)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
-                return BadRequest();
+                return Unauthorized();
             }
+            int userId = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
 
-            var myTutorial = await _context.Tutorials.FindAsync(id);
+            var myTutorial = _context.Tutorials.Find(id);
             if (myTutorial == null)
             {
                 return NotFound();
             }
+
+            if (myTutorial.UserId != userId)
+            {
+                return Forbid();
+            }
+
             myTutorial.Title = tutorial.Title.Trim();
             myTutorial.Description = tutorial.Description.Trim();
             myTutorial.UpdatedAt = DateTime.Now;
@@ -102,21 +109,14 @@ namespace LearningAPI.Controllers
             _context.Tutorials.Update(myTutorial);
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!TutorialExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest("Technical error");
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Tutorial
@@ -170,11 +170,6 @@ namespace LearningAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool TutorialExists(int id)
-        {
-            return (_context.Tutorials?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
