@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LearningAPI;
 using LearningAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace LearningAPI.Controllers
 {
@@ -97,9 +99,16 @@ namespace LearningAPI.Controllers
 
         // POST: api/Tutorial
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<Tutorial>> PostTutorial(Tutorial tutorial)
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+            int userId = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
+
             if (_context.Tutorials == null)
             {
                 return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
@@ -111,7 +120,8 @@ namespace LearningAPI.Controllers
                 Title = tutorial.Title.Trim(),
                 Description = tutorial.Description.Trim(),
                 CreatedAt = now,
-                UpdatedAt = now
+                UpdatedAt = now,
+                UserId = userId
             };
 
             _context.Tutorials.Add(myTutorial);
