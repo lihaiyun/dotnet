@@ -80,23 +80,37 @@ namespace LearningAPI.Controllers
             return Ok(response);
         }
 
+        // POST: api/Tutorial
+        [HttpPost, Authorize]
+        public IActionResult PostTutorial(Tutorial tutorial)
+        {
+            var now = DateTime.Now;
+            int userId = GetUserId();
+            var myTutorial = new Tutorial()
+            {
+                Title = tutorial.Title.Trim(),
+                Description = tutorial.Description.Trim(),
+                CreatedAt = now,
+                UpdatedAt = now,
+                UserId = userId
+            };
+
+            _context.Tutorials.Add(myTutorial);
+            _context.SaveChanges();
+            return Ok(myTutorial);
+        }
+
         // PUT: api/Tutorial/5
         [HttpPut("{id}"), Authorize]
         public IActionResult PutTutorial(int id, Tutorial tutorial)
         {
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return Unauthorized();
-            }
-            int userId = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c => c.Value).SingleOrDefault());
-
             var myTutorial = _context.Tutorials.Find(id);
             if (myTutorial == null)
             {
                 return NotFound();
             }
 
+            int userId = GetUserId();
             if (myTutorial.UserId != userId)
             {
                 return Forbid();
@@ -115,61 +129,34 @@ namespace LearningAPI.Controllers
             {
                 return BadRequest("Technical error");
             }
-
             return Ok();
-        }
-
-        // POST: api/Tutorial
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost, Authorize]
-        public async Task<ActionResult<Tutorial>> PostTutorial(Tutorial tutorial)
-        {
-            if (User.Identity == null || !User.Identity.IsAuthenticated)
-            {
-                return Unauthorized();
-            }
-            int userId = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c => c.Value).SingleOrDefault());
-
-            if (_context.Tutorials == null)
-            {
-                return Problem("Entity set 'MyDbContext.Tutorials'  is null.");
-            }
-
-            var now = DateTime.Now;
-            var myTutorial = new Tutorial()
-            {
-                Title = tutorial.Title.Trim(),
-                Description = tutorial.Description.Trim(),
-                CreatedAt = now,
-                UpdatedAt = now,
-                UserId = userId
-            };
-
-            _context.Tutorials.Add(myTutorial);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTutorial", new { id = myTutorial.Id }, myTutorial);
         }
 
         // DELETE: api/Tutorial/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTutorial(int id)
+        public IActionResult DeleteTutorial(int id)
         {
-            if (_context.Tutorials == null)
-            {
-                return NotFound();
-            }
-            var tutorial = await _context.Tutorials.FindAsync(id);
-            if (tutorial == null)
+            var myTutorial = _context.Tutorials.Find(id);
+            if (myTutorial == null)
             {
                 return NotFound();
             }
 
-            _context.Tutorials.Remove(tutorial);
-            await _context.SaveChangesAsync();
+            int userId = GetUserId();
+            if (myTutorial.UserId != userId)
+            {
+                return Forbid();
+            }
 
-            return NoContent();
+            _context.Tutorials.Remove(myTutorial);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        private int GetUserId()
+        {
+            return Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
         }
     }
 }
