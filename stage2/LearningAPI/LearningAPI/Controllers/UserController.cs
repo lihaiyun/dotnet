@@ -95,20 +95,21 @@ namespace LearningAPI.Controllers
         [HttpGet("auth"), Authorize]
         public IActionResult Auth()
         {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
-                var id = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-                var name = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
-                var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
-                var user = new
-                {
-                    id,
-                    email,
-                    name
-                };
-                return Ok(new { user });
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            var id = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+            var name = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+            var user = new
+            {
+                id,
+                email,
+                name
+            };
+            return Ok(new { user });
         }
 
         private string CreateToken(User user)
