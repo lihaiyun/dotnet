@@ -78,15 +78,12 @@ namespace LearningAPI.Controllers
             }
 
             // Return user info
-            int id = foundUser.Id;
-            string email = foundUser.Email;
-            string name = foundUser.Name;
             string accessToken = CreateToken(foundUser);
             var user = new
             {
-                id,
-                email,
-                name
+                foundUser.Id,
+                foundUser.Email,
+                foundUser.Name
             };
             return Ok(new { user, accessToken });
         }
