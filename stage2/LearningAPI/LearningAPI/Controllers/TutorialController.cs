@@ -25,14 +25,14 @@ namespace LearningAPI.Controllers
 
         // GET: api/Tutorial
         [HttpGet]
-        public async Task<IActionResult> GetTutorials(string? search)
+        public IActionResult GetTutorials(string? search)
         {
             IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
             if (search != null)
             {
                 result = result.Where(x => x.Title.Contains(search) || x.Description.Contains(search));
             }
-            var list = await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
+            var list = result.OrderByDescending(x => x.CreatedAt).ToList();
 
             var response = list
                 .Select(t => new
@@ -53,15 +53,15 @@ namespace LearningAPI.Controllers
 
         // GET: api/Tutorial/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTutorial(int id)
+        public IActionResult GetTutorial(int id)
         {
-            Tutorial? t = await _context.Tutorials.FindAsync(id);
+            Tutorial? t = _context.Tutorials.Find(id);
             if (t == null)
             {
                 return NotFound();
             }
 
-            User? user = await _context.Users.FindAsync(t.UserId);
+            User? user = _context.Users.Find(t.UserId);
             t.User = user;
 
             var response = new
