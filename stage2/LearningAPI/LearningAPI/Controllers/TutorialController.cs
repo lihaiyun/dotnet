@@ -25,37 +25,59 @@ namespace LearningAPI.Controllers
 
         // GET: api/Tutorial
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tutorial>>> GetTutorials(string? search)
+        public async Task<IActionResult> GetTutorials(string? search)
         {
-            if (_context.Tutorials == null)
-            {
-                return NotFound();
-            }
-
-            IQueryable<Tutorial> result = _context.Tutorials.Include(x => x.User);
+            IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
             if (search != null)
             {
                 result = result.Where(x => x.Title.Contains(search) || x.Description.Contains(search));
             }
-            return await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
+            var list = await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
+
+            var response = list
+                .Select(t => new
+                {
+                    t.Id,
+                    t.Title,
+                    t.Description,
+                    t.CreatedAt,
+                    t.UpdatedAt,
+                    t.UserId,
+                    User = new
+                    {
+                        Name = t.User != null ? t.User.Name : string.Empty
+                    }
+                });
+            return Ok(response);
         }
 
         // GET: api/Tutorial/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tutorial>> GetTutorial(int id)
+        public async Task<IActionResult> GetTutorial(int id)
         {
-            if (_context.Tutorials == null)
-            {
-                return NotFound();
-            }
-            var tutorial = await _context.Tutorials.FindAsync(id);
-
-            if (tutorial == null)
+            Tutorial? t = await _context.Tutorials.FindAsync(id);
+            if (t == null)
             {
                 return NotFound();
             }
 
-            return tutorial;
+            User? user = await _context.Users.FindAsync(t.UserId);
+            t.User = user;
+
+            var response = new
+            {
+                t.Id,
+                t.Title,
+                t.Description,
+                t.CreatedAt,
+                t.UpdatedAt,
+                t.UserId,
+                User = new
+                {
+                    Name = t.User != null ? t.User.Name : string.Empty
+                }
+            };
+            return Ok(response);
         }
 
         // PUT: api/Tutorial/5
