@@ -15,7 +15,10 @@ namespace LearningAPI
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string? connectionString = _configuration.GetConnectionString("MyConnection");
-            optionsBuilder.UseSqlServer(connectionString);
+            if (connectionString != null)
+            {
+                optionsBuilder.UseMySQL(connectionString);
+            }
         }
 
         public DbSet<Tutorial> Tutorials { get; set; }
