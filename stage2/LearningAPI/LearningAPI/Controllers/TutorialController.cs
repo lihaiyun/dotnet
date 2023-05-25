@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace LearningAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TutorialController : ControllerBase
     {
