@@ -26,12 +26,12 @@ namespace LearningAPI.Controllers
             }
 
             var id = Nanoid.Nanoid.Generate(size:10);
-            var fileName = id + Path.GetExtension(file.FileName);
-            var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot//uploads", fileName);
+            var filename = id + Path.GetExtension(file.FileName);
+            var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot//uploads", filename);
             using var fileStream = new FileStream(imagePath, FileMode.Create);
             file.CopyTo(fileStream);
 
-            return Ok(new { fileName });
+            return Ok(new { filename });
         }
     }
 }
