@@ -16,7 +16,7 @@ namespace LearningAPI.Controllers
             _environment = environment;
         }
 
-        // POST: api/File/upload
+        // POST: File/upload
         [HttpPost("upload"), Authorize]
         public IActionResult Upload(IFormFile file)
         {

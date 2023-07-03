@@ -22,7 +22,7 @@ namespace LearningAPI.Controllers
             _configuration = configuration;
         }
 
-        // POST: api/User/register
+        // POST: User/register
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
@@ -56,7 +56,7 @@ namespace LearningAPI.Controllers
             return Ok(user);
         }
 
-        // POST: api/User/login
+        // POST: User/login
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
@@ -88,7 +88,7 @@ namespace LearningAPI.Controllers
             return Ok(new { user, accessToken });
         }
 
-        // GET: api/User/auth
+        // GET: User/auth
         [HttpGet("auth"), Authorize]
         public IActionResult Auth()
         {

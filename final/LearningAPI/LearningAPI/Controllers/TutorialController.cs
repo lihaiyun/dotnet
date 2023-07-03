@@ -18,7 +18,7 @@ namespace LearningAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Tutorial
+        // GET: Tutorial
         [HttpGet]
         public IActionResult GetTutorials(string? search)
         {
@@ -47,7 +47,7 @@ namespace LearningAPI.Controllers
             return Ok(response);
         }
 
-        // GET: api/Tutorial/5
+        // GET: Tutorial/5
         [HttpGet("{id}")]
         public IActionResult GetTutorial(int id)
         {
@@ -77,7 +77,7 @@ namespace LearningAPI.Controllers
             return Ok(response);
         }
 
-        // POST: api/Tutorial
+        // POST: Tutorial
         [HttpPost, Authorize]
         public IActionResult PostTutorial(Tutorial tutorial)
         {
@@ -98,7 +98,7 @@ namespace LearningAPI.Controllers
             return Ok(myTutorial);
         }
 
-        // PUT: api/Tutorial/5
+        // PUT: Tutorial/5
         [HttpPut("{id}"), Authorize]
         public IActionResult PutTutorial(int id, Tutorial tutorial)
         {
@@ -131,7 +131,7 @@ namespace LearningAPI.Controllers
             return Ok();
         }
 
-        // DELETE: api/Tutorial/5
+        // DELETE: Tutorial/5
         [HttpDelete("{id}")]
         public IActionResult DeleteTutorial(int id)
         {
