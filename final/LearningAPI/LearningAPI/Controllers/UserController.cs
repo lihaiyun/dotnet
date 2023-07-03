@@ -97,8 +97,8 @@ namespace LearningAPI.Controllers
                 return Unauthorized();
             }
 
-            var id = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c => c.Value).SingleOrDefault();
+            var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
             var name = User.Claims.Where(c => c.Type == ClaimTypes.Name)
                 .Select(c => c.Value).SingleOrDefault();
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
