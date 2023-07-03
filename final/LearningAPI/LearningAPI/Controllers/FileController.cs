@@ -30,7 +30,6 @@ namespace LearningAPI.Controllers
             var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot//uploads", filename);
             using var fileStream = new FileStream(imagePath, FileMode.Create);
             file.CopyTo(fileStream);
-
             return Ok(new { filename });
         }
     }
