@@ -12,6 +12,9 @@ namespace LearningAPI.Models
         [Required, MinLength(3), MaxLength(500)]
         public string Description { get; set; } = string.Empty;
 
+        [MaxLength(20)]
+        public string? ImageFile { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
