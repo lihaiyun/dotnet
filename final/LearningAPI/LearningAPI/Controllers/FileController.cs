@@ -22,7 +22,7 @@ namespace LearningAPI.Controllers
         {
             if (file.Length > 1024 * 1024)
             {
-                return BadRequest("File size cannot exceed 1MB.");
+                return BadRequest("Maximum file size is 1MB");
             }
 
             var id = Nanoid.Nanoid.Generate(size:10);
