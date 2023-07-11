@@ -1,6 +1,25 @@
-﻿namespace LearningAPI.Controllers
+﻿using LearningAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LearningAPI.Controllers
 {
-    public class TutorialController
+    [ApiController]
+    [Route("[controller]")]
+    public class TutorialController : ControllerBase
     {
+        private static readonly List<Tutorial> list = new();
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(list);
+        }
+
+        [HttpPost]
+        public IActionResult AddTutorial(Tutorial tutorial)
+        {
+            list.Add(tutorial);
+            return Ok(tutorial);
+        }
     }
 }
