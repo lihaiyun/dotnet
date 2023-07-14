@@ -17,7 +17,7 @@ namespace LearningAPI
             string? connectionString = _configuration.GetConnectionString("MyConnection");
             if (connectionString != null)
             {
-                optionsBuilder.UseMySQL(connectionString);
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
