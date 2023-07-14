@@ -54,5 +54,44 @@ namespace LearningAPI.Controllers
             _context.SaveChanges();
             return Ok(myTutorial);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTutorial(int id, Tutorial tutorial)
+        {
+            var myTutorial = _context.Tutorials.Find(id);
+            if (myTutorial == null)
+            {
+                return NotFound();
+            }
+
+            myTutorial.Title = tutorial.Title.Trim();
+            myTutorial.Description = tutorial.Description.Trim();
+            myTutorial.UpdatedAt = DateTime.Now;
+
+            _context.Tutorials.Update(myTutorial);
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Technical error");
+            }
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTutorial(int id)
+        {
+            var myTutorial = _context.Tutorials.Find(id);
+            if (myTutorial == null)
+            {
+                return NotFound();
+            }
+
+            _context.Tutorials.Remove(myTutorial);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
