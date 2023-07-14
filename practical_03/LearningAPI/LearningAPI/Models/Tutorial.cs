@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace LearningAPI.Models
 {
@@ -12,8 +14,10 @@ namespace LearningAPI.Models
         [Required, MinLength(3), MaxLength(500)]
         public string Description { get; set; } = string.Empty;
 
+        [Column(TypeName = "datetime")]
         public DateTime CreatedAt { get; set; }
 
+        [Column(TypeName = "datetime")]
         public DateTime UpdatedAt { get; set; }
     }
 }
