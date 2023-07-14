@@ -9,6 +9,13 @@ namespace LearningAPI.Controllers
     {
         private static readonly List<Tutorial> list = new();
 
+        private readonly MyDbContext _context;
+
+        public TutorialController(MyDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -18,8 +25,18 @@ namespace LearningAPI.Controllers
         [HttpPost]
         public IActionResult AddTutorial(Tutorial tutorial)
         {
-            list.Add(tutorial);
-            return Ok(tutorial);
+            var now = DateTime.Now;
+            var myTutorial = new Tutorial()
+            {
+                Title = tutorial.Title.Trim(),
+                Description = tutorial.Description.Trim(),
+                CreatedAt = now,
+                UpdatedAt = now
+            };
+
+            _context.Tutorials.Add(myTutorial);
+            _context.SaveChanges();
+            return Ok(myTutorial);
         }
     }
 }
