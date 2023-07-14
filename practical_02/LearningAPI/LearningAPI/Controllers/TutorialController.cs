@@ -7,8 +7,6 @@ namespace LearningAPI.Controllers
     [Route("[controller]")]
     public class TutorialController : ControllerBase
     {
-        private static readonly List<Tutorial> list = new();
-
         private readonly MyDbContext _context;
 
         public TutorialController(MyDbContext context)
@@ -19,6 +17,8 @@ namespace LearningAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            IQueryable<Tutorial> result = _context.Tutorials;
+            var list = result.OrderByDescending(x => x.CreatedAt).ToList();
             return Ok(list);
         }
 
