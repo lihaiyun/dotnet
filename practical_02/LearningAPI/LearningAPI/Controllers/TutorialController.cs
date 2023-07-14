@@ -15,9 +15,14 @@ namespace LearningAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(string? search)
         {
             IQueryable<Tutorial> result = _context.Tutorials;
+            if (search != null)
+            {
+                result = result.Where(x => x.Title.Contains(search)
+                    || x.Description.Contains(search));
+            }
             var list = result.OrderByDescending(x => x.CreatedAt).ToList();
             return Ok(list);
         }
