@@ -27,6 +27,17 @@ namespace LearningAPI.Controllers
             return Ok(list);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetTutorial(int id)
+        {
+            Tutorial? tutorial = _context.Tutorials.Find(id);
+            if (tutorial == null)
+            {
+                return NotFound();
+            }
+            return Ok(tutorial);
+        }
+
         [HttpPost]
         public IActionResult AddTutorial(Tutorial tutorial)
         {
