@@ -8,10 +8,12 @@ namespace LearningAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(MyDbContext context)
+        public UserController(MyDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
