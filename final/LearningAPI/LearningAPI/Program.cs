@@ -10,12 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MyDbContext>();
 
+// Add CORS policy
+var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts");
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins(allowedHosts)
             .AllowAnyMethod()
             .AllowAnyHeader();
         });
