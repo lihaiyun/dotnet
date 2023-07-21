@@ -7,13 +7,13 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<MyDbContext>();
 
 // Add CORS policy
-var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts");
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins(allowedHosts)
+            policy.WithOrigins(allowedOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader();
         });
