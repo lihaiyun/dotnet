@@ -81,7 +81,8 @@ namespace LearningAPI.Controllers
                 foundUser.Email,
                 foundUser.Name
             };
-            return Ok(new { user });
+            string accessToken = CreateToken(foundUser);
+            return Ok(new { user, accessToken });
         }
 
         private string CreateToken(User user)
