@@ -1,5 +1,9 @@
 ﻿using LearningAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace LearningAPI.Controllers
 {
@@ -78,6 +82,32 @@ namespace LearningAPI.Controllers
                 foundUser.Name
             };
             return Ok(new { user });
+        }
+
+        private string CreateToken(User user)
+        {
+            string secret = _configuration.GetValue<string>("Authentication:Secret");
+            int tokenExpiresDays = _configuration.GetValue<int>("Authentication:TokenExpiresDays");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secret);
+
+            // 2021-04-16 Haiyun: Add social media emails in claims
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Email, user.Email)
+                }),
+                Expires = DateTime.UtcNow.AddDays(tokenExpiresDays),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            string token = tokenHandler.WriteToken(securityToken);
+
+            return token;
         }
     }
 }
