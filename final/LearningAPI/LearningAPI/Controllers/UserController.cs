@@ -120,7 +120,6 @@ namespace LearningAPI.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
 
-            // 2021-04-16 Haiyun: Add social media emails in claims
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
