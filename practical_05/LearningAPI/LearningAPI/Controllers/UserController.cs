@@ -1,4 +1,5 @@
 ﻿using LearningAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -83,6 +84,24 @@ namespace LearningAPI.Controllers
             };
             string accessToken = CreateToken(foundUser);
             return Ok(new { user, accessToken });
+        }
+
+        [HttpGet("auth"), Authorize]
+        public IActionResult Auth()
+        {
+            var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
+            var name = User.Claims.Where(c => c.Type == ClaimTypes.Name)
+                .Select(c => c.Value).SingleOrDefault();
+            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
+                .Select(c => c.Value).SingleOrDefault();
+            var user = new
+            {
+                id,
+                email,
+                name
+            };
+            return Ok(new { user });
         }
 
         private string CreateToken(User user)
