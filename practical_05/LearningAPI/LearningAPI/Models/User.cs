@@ -22,5 +22,8 @@ namespace LearningAPI.Models
 
         [Column(TypeName = "datetime")]
         public DateTime UpdatedAt { get; set; }
+
+        // Navigation property to represent the one-to-many relationship
+        public List<Tutorial>? Tutorials { get; set; }
     }
 }
