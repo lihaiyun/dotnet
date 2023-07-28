@@ -1,4 +1,5 @@
 ﻿using LearningAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -39,16 +40,18 @@ namespace LearningAPI.Controllers
             return Ok(tutorial);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult AddTutorial(Tutorial tutorial)
         {
+            int userId = GetUserId();
             var now = DateTime.Now;
             var myTutorial = new Tutorial()
             {
                 Title = tutorial.Title.Trim(),
                 Description = tutorial.Description.Trim(),
                 CreatedAt = now,
-                UpdatedAt = now
+                UpdatedAt = now,
+                UserId = userId
             };
 
             _context.Tutorials.Add(myTutorial);
