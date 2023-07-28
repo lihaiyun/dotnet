@@ -1,6 +1,7 @@
 ﻿using LearningAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace LearningAPI.Controllers
@@ -19,7 +20,7 @@ namespace LearningAPI.Controllers
         [HttpGet]
         public IActionResult GetAll(string? search)
         {
-            IQueryable<Tutorial> result = _context.Tutorials;
+            IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
             if (search != null)
             {
                 result = result.Where(x => x.Title.Contains(search)
