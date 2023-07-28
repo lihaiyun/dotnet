@@ -1,5 +1,6 @@
 ﻿using LearningAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LearningAPI.Controllers
 {
@@ -92,6 +93,13 @@ namespace LearningAPI.Controllers
             _context.Tutorials.Remove(myTutorial);
             _context.SaveChanges();
             return Ok();
+        }
+
+        private int GetUserId()
+        {
+            return Convert.ToInt32(User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
         }
     }
 }
