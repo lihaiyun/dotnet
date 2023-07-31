@@ -27,7 +27,20 @@ namespace LearningAPI.Controllers
                     || x.Description.Contains(search));
             }
             var list = result.OrderByDescending(x => x.CreatedAt).ToList();
-            return Ok(list);
+            var data = list.Select(t => new
+            {
+                t.Id,
+                t.Title,
+                t.Description,
+                t.CreatedAt,
+                t.UpdatedAt,
+                t.UserId,
+                User = new
+                {
+                    t.User?.Name
+                }
+            });
+            return Ok(data);
         }
 
         [HttpGet("{id}")]
