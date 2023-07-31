@@ -46,12 +46,26 @@ namespace LearningAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetTutorial(int id)
         {
-            Tutorial? tutorial = _context.Tutorials.Find(id);
+            Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
+                .FirstOrDefault(t => t.Id == id);
             if (tutorial == null)
             {
                 return NotFound();
             }
-            return Ok(tutorial);
+            var data = new
+            {
+                tutorial.Id,
+                tutorial.Title,
+                tutorial.Description,
+                tutorial.CreatedAt,
+                tutorial.UpdatedAt,
+                tutorial.UserId,
+                User = new
+                {
+                    tutorial.User?.Name
+                }
+            };
+            return Ok(data);
         }
 
         [HttpPost, Authorize]
