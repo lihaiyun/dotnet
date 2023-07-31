@@ -87,13 +87,19 @@ namespace LearningAPI.Controllers
             return Ok(myTutorial);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public IActionResult UpdateTutorial(int id, Tutorial tutorial)
         {
             var myTutorial = _context.Tutorials.Find(id);
             if (myTutorial == null)
             {
                 return NotFound();
+            }
+
+            int userId = GetUserId();
+            if (myTutorial.UserId != userId)
+            {
+                return Forbid();
             }
 
             myTutorial.Title = tutorial.Title.Trim();
@@ -112,13 +118,19 @@ namespace LearningAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult DeleteTutorial(int id)
         {
             var myTutorial = _context.Tutorials.Find(id);
             if (myTutorial == null)
             {
                 return NotFound();
+            }
+
+            int userId = GetUserId();
+            if (myTutorial.UserId != userId)
+            {
+                return Forbid();
             }
 
             _context.Tutorials.Remove(myTutorial);
