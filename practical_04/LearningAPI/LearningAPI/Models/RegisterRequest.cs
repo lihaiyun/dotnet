@@ -6,8 +6,8 @@ namespace LearningAPI.Models
     {
         [Required, MinLength(3), MaxLength(50)]
         // Regular expression to enforce name format
-        // letters, spaces, apostrophes, hyphens, commas and periods
-        [RegularExpression(@"^[a-zA-Z '-,.]+$", ErrorMessage = "Invalid name")]
+        [RegularExpression(@"^[a-zA-Z '-,.]+$",
+            ErrorMessage = "Only allow letters, spaces and characters: ' - , .")]
         public string Name { get; set; } = string.Empty;
 
         [Required, EmailAddress, MaxLength(50)]
@@ -15,8 +15,8 @@ namespace LearningAPI.Models
 
         [Required, MinLength(8), MaxLength(50)]
         // Regular expression to enforce password complexity
-        // at least one letter, at least one number and 8-50 characters
-        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*[0-9]).{8,50}$", ErrorMessage = "Invalid password")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$",
+            ErrorMessage = "At least 1 letter and 1 number")]
         public string Password { get; set; } = string.Empty;
     }
 }
