@@ -8,6 +8,5 @@
 bin/
 obj/
 
-# project's static files in wwwroot
-LearningAPI/wwwroot/uploads/*
-!LearningAPI/wwwroot/uploads/README.md
+# Mac OS
+.DS_Store
