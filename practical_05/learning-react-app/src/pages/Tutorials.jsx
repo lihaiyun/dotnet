@@ -102,7 +102,7 @@ function Tutorials() {
                                             color="text.secondary">
                                             <AccountCircle sx={{ mr: 1 }} />
                                             <Typography>
-                                                {tutorial.user.name}
+                                                {tutorial.user?.name}
                                             </Typography>
                                         </Box>
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}

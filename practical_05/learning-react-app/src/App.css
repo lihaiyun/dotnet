@@ -4,15 +4,7 @@
   margin-right: 16px;
 }
 
-.AppBar a:hover {
-  color: lightblue;
-}
-
 .AppBar button {
   color: inherit;
   margin-left: 12px;
-}
-
-.AppBar button:hover {
-  color: lightblue;
 }
