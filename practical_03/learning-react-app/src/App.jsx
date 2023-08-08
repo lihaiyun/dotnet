@@ -1,11 +1,12 @@
 import './App.css';
 import { Container, AppBar, Toolbar, Typography } from '@mui/material';
-import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import MyTheme from './themes/MyTheme';
 import Tutorials from './pages/Tutorials';
 import AddTutorial from './pages/AddTutorial';
 import EditTutorial from './pages/EditTutorial';
+import MyForm from './pages/MyForm';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path={"/tutorials"} element={<Tutorials />} />
             <Route path={"/addtutorial"} element={<AddTutorial />} />
             <Route path={"/edittutorial/:id"} element={<EditTutorial />} />
+            <Route path={"/form"} element={<MyForm />} />
           </Routes>
         </Container>
       </ThemeProvider>
