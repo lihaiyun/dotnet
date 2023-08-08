@@ -70,21 +70,23 @@ function EditTutorial() {
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit}>
                 <TextField
-                    fullWidth margin="normal" autoComplete="off"
+                    fullWidth margin="dense" autoComplete="off"
                     label="Title"
                     name="title"
                     value={formik.values.title}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     error={formik.touched.title && Boolean(formik.errors.title)}
                     helperText={formik.touched.title && formik.errors.title}
                 />
                 <TextField
-                    fullWidth margin="normal" autoComplete="off"
+                    fullWidth margin="dense" autoComplete="off"
                     multiline minRows={2}
                     label="Description"
                     name="description"
                     value={formik.values.description}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     error={formik.touched.description && Boolean(formik.errors.description)}
                     helperText={formik.touched.description && formik.errors.description}
                 />
