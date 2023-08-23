@@ -36,7 +36,7 @@ function Register() {
                     "At least 1 letter and 1 number"),
             confirmPassword: yup.string().trim()
                 .required('Confirm password is required')
-                .oneOf([yup.ref('password'), null], 'Passwords must match')
+                .oneOf([yup.ref('password')], 'Passwords must match')
         }),
         onSubmit: (data) => {
             data.name = data.name.trim();
