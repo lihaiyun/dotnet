@@ -32,6 +32,7 @@ namespace LearningAPI.Controllers
                 t.Id,
                 t.Title,
                 t.Description,
+                t.ImageFile,
                 t.CreatedAt,
                 t.UpdatedAt,
                 t.UserId,
@@ -57,6 +58,7 @@ namespace LearningAPI.Controllers
                 tutorial.Id,
                 tutorial.Title,
                 tutorial.Description,
+                tutorial.ImageFile,
                 tutorial.CreatedAt,
                 tutorial.UpdatedAt,
                 tutorial.UserId,
@@ -77,6 +79,7 @@ namespace LearningAPI.Controllers
             {
                 Title = tutorial.Title.Trim(),
                 Description = tutorial.Description.Trim(),
+                ImageFile = tutorial.ImageFile,
                 CreatedAt = now,
                 UpdatedAt = now,
                 UserId = userId
@@ -104,6 +107,7 @@ namespace LearningAPI.Controllers
 
             myTutorial.Title = tutorial.Title.Trim();
             myTutorial.Description = tutorial.Description.Trim();
+            myTutorial.ImageFile = tutorial.ImageFile;
             myTutorial.UpdatedAt = DateTime.Now;
 
             _context.Tutorials.Update(myTutorial);
