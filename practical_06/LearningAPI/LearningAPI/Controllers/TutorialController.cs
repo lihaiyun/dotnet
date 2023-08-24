@@ -110,7 +110,6 @@ namespace LearningAPI.Controllers
             myTutorial.ImageFile = tutorial.ImageFile;
             myTutorial.UpdatedAt = DateTime.Now;
 
-            _context.Tutorials.Update(myTutorial);
             try
             {
                 _context.SaveChanges();

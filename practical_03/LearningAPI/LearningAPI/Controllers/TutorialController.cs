@@ -68,7 +68,6 @@ namespace LearningAPI.Controllers
             myTutorial.Description = tutorial.Description.Trim();
             myTutorial.UpdatedAt = DateTime.Now;
 
-            _context.Tutorials.Update(myTutorial);
             try
             {
                 _context.SaveChanges();
