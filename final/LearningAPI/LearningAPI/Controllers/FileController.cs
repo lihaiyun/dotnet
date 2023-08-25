@@ -8,7 +8,7 @@ namespace LearningAPI.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
-        private IWebHostEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
 
         public FileController(IWebHostEnvironment environment)
         {
