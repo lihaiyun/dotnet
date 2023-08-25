@@ -16,12 +16,15 @@ namespace LearningAPI.Controllers
         private readonly MyDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(MyDbContext context, IConfiguration configuration, IMapper mapper)
+        public UserController(MyDbContext context, IConfiguration configuration, IMapper mapper,
+            ILogger<UserController> logger)
         {
             _context = context;
             _configuration = configuration;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -61,7 +64,7 @@ namespace LearningAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.LogError(ex, "Error in Register");
                 return StatusCode(500);
             }
         }
