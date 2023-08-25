@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddLogging();
 builder.Services.AddDbContext<MyDbContext>();
 
 // Auto Mapper
@@ -18,12 +19,6 @@ var mappingConfig = new MapperConfiguration(mc =>
 });
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
-
-// Logging
-builder.Services.AddLogging(builder =>
-{
-    builder.AddConsole();
-});
 
 // Add CORS policy
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
