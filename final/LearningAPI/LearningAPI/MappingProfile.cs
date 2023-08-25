@@ -8,6 +8,7 @@ namespace LearningAPI
         public MappingProfile()
         {
             CreateMap<Tutorial, TutorialDTO>();
+            CreateMap<User, UserDTO>();
         }
     }
 }

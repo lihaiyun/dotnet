@@ -15,5 +15,7 @@
         public DateTime UpdatedAt { get; set; }
 
         public int UserId { get; set; }
+
+        public UserDTO? User { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
         public IActionResult GetAll(string? search)
         {
             IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
@@ -30,24 +31,12 @@ namespace LearningAPI.Controllers
                     || x.Description.Contains(search));
             }
             var list = result.OrderByDescending(x => x.CreatedAt).ToList();
-            var data = list.Select(t => new
-            {
-                t.Id,
-                t.Title,
-                t.Description,
-                t.ImageFile,
-                t.CreatedAt,
-                t.UpdatedAt,
-                t.UserId,
-                User = new
-                {
-                    t.User?.Name
-                }
-            });
+            IEnumerable<TutorialDTO> data = list.Select(t => _mapper.Map<TutorialDTO>(t));
             return Ok(data);
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult GetTutorial(int id)
         {
             Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
@@ -56,20 +45,7 @@ namespace LearningAPI.Controllers
             {
                 return NotFound();
             }
-            var data = new
-            {
-                tutorial.Id,
-                tutorial.Title,
-                tutorial.Description,
-                tutorial.ImageFile,
-                tutorial.CreatedAt,
-                tutorial.UpdatedAt,
-                tutorial.UserId,
-                User = new
-                {
-                    tutorial.User?.Name
-                }
-            };
+            TutorialDTO data = _mapper.Map<TutorialDTO>(tutorial);
             return Ok(data);
         }
 
@@ -91,8 +67,10 @@ namespace LearningAPI.Controllers
 
             _context.Tutorials.Add(myTutorial);
             _context.SaveChanges();
-            
-            TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(myTutorial);
+
+            Tutorial? newTutorial = _context.Tutorials.Include(t => t.User)
+                .FirstOrDefault(t => t.Id == myTutorial.Id);
+            TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(newTutorial);
             return Ok(tutorialDTO);
         }
 
