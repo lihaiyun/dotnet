@@ -1,4 +1,5 @@
-﻿using LearningAPI.Models;
+﻿using AutoMapper;
+using LearningAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace LearningAPI.Controllers
     public class TutorialController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IMapper _mapper;
 
-        public TutorialController(MyDbContext context)
+        public TutorialController(MyDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -71,7 +74,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost, Authorize]
-        [ProducesResponseType(typeof(Tutorial), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult AddTutorial(AddTutorialRequest tutorial)
         {
             int userId = GetUserId();
@@ -88,7 +91,9 @@ namespace LearningAPI.Controllers
 
             _context.Tutorials.Add(myTutorial);
             _context.SaveChanges();
-            return Ok(myTutorial);
+            
+            TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(myTutorial);
+            return Ok(tutorialDTO);
         }
 
         [HttpPut("{id}"), Authorize]
