@@ -64,7 +64,7 @@ namespace LearningAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Register");
+                _logger.LogError(ex, "Error when user register");
                 return StatusCode(500);
             }
         }
@@ -73,50 +73,66 @@ namespace LearningAPI.Controllers
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         public IActionResult Login(LoginRequest request)
         {
-            // Trim string values
-            request.Email = request.Email.Trim().ToLower();
-            request.Password = request.Password.Trim();
-
-            // Check email and password
-            string message = "Email or password is not correct.";
-            var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
-            if (foundUser == null)
+            try
             {
-                return BadRequest(new { message });
-            }
-            bool verified = BCrypt.Net.BCrypt.Verify(request.Password, foundUser.Password);
-            if (!verified)
-            {
-                return BadRequest(new { message });
-            }
+                // Trim string values
+                request.Email = request.Email.Trim().ToLower();
+                request.Password = request.Password.Trim();
 
-            // Return user info
-            UserDTO userDTO = _mapper.Map<UserDTO>(foundUser);
-            string accessToken = CreateToken(foundUser);
-            LoginResponse response = new() { User = userDTO, AccessToken = accessToken };
-            return Ok(response);
+                // Check email and password
+                string message = "Email or password is not correct.";
+                var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                if (foundUser == null)
+                {
+                    return BadRequest(new { message });
+                }
+                bool verified = BCrypt.Net.BCrypt.Verify(request.Password, foundUser.Password);
+                if (!verified)
+                {
+                    return BadRequest(new { message });
+                }
+
+                // Return user info
+                UserDTO userDTO = _mapper.Map<UserDTO>(foundUser);
+                string accessToken = CreateToken(foundUser);
+                LoginResponse response = new() { User = userDTO, AccessToken = accessToken };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when user login");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("auth"), Authorize]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         public IActionResult Auth()
         {
-            var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+            try
+            {
+                var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                 .Select(c => c.Value).SingleOrDefault());
-            var name = User.Claims.Where(c => c.Type == ClaimTypes.Name)
-                .Select(c => c.Value).SingleOrDefault();
-            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
-                .Select(c => c.Value).SingleOrDefault();
+                var name = User.Claims.Where(c => c.Type == ClaimTypes.Name)
+                    .Select(c => c.Value).SingleOrDefault();
+                var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
+                    .Select(c => c.Value).SingleOrDefault();
 
-            if (name != null && email != null)
-            {
-                UserDTO userDTO = new() { Id = id, Name = name, Email = email };
-                AuthResponse response = new() { User = userDTO };
-                return Ok(response);
+                if (name != null && email != null)
+                {
+                    UserDTO userDTO = new() { Id = id, Name = name, Email = email };
+                    AuthResponse response = new() { User = userDTO };
+                    return Ok(response);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Unauthorized();
+                _logger.LogError(ex, "Error when user auth");
+                return StatusCode(500);
             }
         }
 
