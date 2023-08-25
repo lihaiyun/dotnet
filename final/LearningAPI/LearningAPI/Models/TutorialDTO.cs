@@ -16,6 +16,6 @@
 
         public int UserId { get; set; }
 
-        public UserDTO? User { get; set; }
+        public UserBasicDTO? User { get; set; }
     }
 }
