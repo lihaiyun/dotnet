@@ -1,4 +1,5 @@
-﻿using LearningAPI.Models;
+﻿using AutoMapper;
+using LearningAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,16 @@ namespace LearningAPI.Controllers
     public class TutorialController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IMapper _mapper;
 
-        public TutorialController(MyDbContext context)
+        public TutorialController(MyDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
         public IActionResult GetAll(string? search)
         {
             IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
@@ -27,20 +31,7 @@ namespace LearningAPI.Controllers
                     || x.Description.Contains(search));
             }
             var list = result.OrderByDescending(x => x.CreatedAt).ToList();
-            var data = list.Select(t => new
-            {
-                t.Id,
-                t.Title,
-                t.Description,
-                t.ImageFile,
-                t.CreatedAt,
-                t.UpdatedAt,
-                t.UserId,
-                User = new
-                {
-                    t.User?.Name
-                }
-            });
+            IEnumerable<TutorialDTO> data = list.Select(t => _mapper.Map<TutorialDTO>(t));
             return Ok(data);
         }
 
