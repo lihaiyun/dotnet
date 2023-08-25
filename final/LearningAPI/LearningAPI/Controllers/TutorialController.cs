@@ -71,7 +71,8 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost, Authorize]
-        public IActionResult AddTutorial(Tutorial tutorial)
+        [ProducesResponseType(typeof(Tutorial), StatusCodes.Status200OK)]
+        public IActionResult AddTutorial(AddTutorialRequest tutorial)
         {
             int userId = GetUserId();
             var now = DateTime.Now;
