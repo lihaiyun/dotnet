@@ -1,9 +1,9 @@
 ﻿namespace LearningAPI.Models
 {
-    public class LoginResponse
+    public class AuthDTO
     {
         public UserDTO User { get; set; } = new UserDTO();
-        
-        public string AccessToken { get; set; } = string.Empty;
+
+        public string? AccessToken { get; set; }
     }
 }
