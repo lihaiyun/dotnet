@@ -67,7 +67,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost("login")]
-        [ProducesResponseType(typeof(AuthDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         public IActionResult Login(LoginRequest request)
         {
             // Trim string values
@@ -90,12 +90,12 @@ namespace LearningAPI.Controllers
             // Return user info
             UserDTO userDTO = _mapper.Map<UserDTO>(foundUser);
             string accessToken = CreateToken(foundUser);
-            AuthDTO authDTO = new() { User = userDTO, AccessToken = accessToken };
-            return Ok(authDTO);
+            LoginResponse response = new() { User = userDTO, AccessToken = accessToken };
+            return Ok(response);
         }
 
         [HttpGet("auth"), Authorize]
-        [ProducesResponseType(typeof(AuthDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         public IActionResult Auth()
         {
             var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
@@ -108,8 +108,8 @@ namespace LearningAPI.Controllers
             if (name != null && email != null)
             {
                 UserDTO userDTO = new() { Id = id, Name = name, Email = email };
-                AuthDTO authDTO = new() { User = userDTO };
-                return Ok(authDTO);
+                AuthResponse response = new() { User = userDTO };
+                return Ok(response);
             }
             else
             {
