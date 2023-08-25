@@ -95,6 +95,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpGet("auth"), Authorize]
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
         public IActionResult Auth()
         {
             var id = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
@@ -103,13 +104,16 @@ namespace LearningAPI.Controllers
                 .Select(c => c.Value).SingleOrDefault();
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
                 .Select(c => c.Value).SingleOrDefault();
-            var user = new
+
+            if (name != null && email != null)
             {
-                id,
-                email,
-                name
-            };
-            return Ok(new { user });
+                UserDTO userDTO = new() { Id = id, Name = name, Email = email };
+                return Ok(userDTO);
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         private string CreateToken(User user)
