@@ -36,6 +36,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult GetTutorial(int id)
         {
             Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
@@ -44,20 +45,7 @@ namespace LearningAPI.Controllers
             {
                 return NotFound();
             }
-            var data = new
-            {
-                tutorial.Id,
-                tutorial.Title,
-                tutorial.Description,
-                tutorial.ImageFile,
-                tutorial.CreatedAt,
-                tutorial.UpdatedAt,
-                tutorial.UserId,
-                User = new
-                {
-                    tutorial.User?.Name
-                }
-            };
+            TutorialDTO data = _mapper.Map<TutorialDTO>(tutorial);
             return Ok(data);
         }
 
