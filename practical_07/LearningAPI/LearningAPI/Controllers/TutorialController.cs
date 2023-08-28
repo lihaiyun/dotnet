@@ -50,6 +50,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost, Authorize]
+        [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult AddTutorial(Tutorial tutorial)
         {
             int userId = GetUserId();
@@ -66,7 +67,11 @@ namespace LearningAPI.Controllers
 
             _context.Tutorials.Add(myTutorial);
             _context.SaveChanges();
-            return Ok(myTutorial);
+
+            Tutorial? newTutorial = _context.Tutorials.Include(t => t.User)
+                    .FirstOrDefault(t => t.Id == myTutorial.Id);
+            TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(newTutorial);
+            return Ok(tutorialDTO);
         }
 
         [HttpPut("{id}"), Authorize]
