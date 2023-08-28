@@ -75,7 +75,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPut("{id}"), Authorize]
-        public IActionResult UpdateTutorial(int id, Tutorial tutorial)
+        public IActionResult UpdateTutorial(int id, UpdateTutorialRequest tutorial)
         {
             var myTutorial = _context.Tutorials.Find(id);
             if (myTutorial == null)
@@ -89,9 +89,18 @@ namespace LearningAPI.Controllers
                 return Forbid();
             }
 
-            myTutorial.Title = tutorial.Title.Trim();
-            myTutorial.Description = tutorial.Description.Trim();
-            myTutorial.ImageFile = tutorial.ImageFile;
+            if (tutorial.Title != null)
+            {
+                myTutorial.Title = tutorial.Title.Trim();
+            }
+            if (tutorial.Description != null)
+            {
+                myTutorial.Description = tutorial.Description.Trim();
+            }
+            if (tutorial.ImageFile != null)
+            {
+                myTutorial.ImageFile = tutorial.ImageFile;
+            }
             myTutorial.UpdatedAt = DateTime.Now;
 
             try
