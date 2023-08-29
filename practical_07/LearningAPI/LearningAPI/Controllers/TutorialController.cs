@@ -13,26 +13,37 @@ namespace LearningAPI.Controllers
     {
         private readonly MyDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogger<TutorialController> _logger;
 
-        public TutorialController(MyDbContext context, IMapper mapper)
+        public TutorialController(MyDbContext context, IMapper mapper, 
+            ILogger<TutorialController> logger)
         {
             _context = context;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
         public IActionResult GetAll(string? search)
         {
-            IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
-            if (search != null)
+            try
             {
-                result = result.Where(x => x.Title.Contains(search)
-                    || x.Description.Contains(search));
+                IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
+                if (search != null)
+                {
+                    result = result.Where(x => x.Title.Contains(search)
+                        || x.Description.Contains(search));
+                }
+                var list = result.OrderByDescending(x => x.CreatedAt).ToList();
+                IEnumerable<TutorialDTO> data = list.Select(t => _mapper.Map<TutorialDTO>(t));
+                return Ok(data);
             }
-            var list = result.OrderByDescending(x => x.CreatedAt).ToList();
-            IEnumerable<TutorialDTO> data = list.Select(t => _mapper.Map<TutorialDTO>(t));
-            return Ok(data);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when get all tutorials");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("{id}")]
