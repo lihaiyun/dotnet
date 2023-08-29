@@ -95,13 +95,21 @@ namespace LearningAPI.Controllers
                 .Select(c => c.Value).SingleOrDefault();
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
                 .Select(c => c.Value).SingleOrDefault();
-            var user = new
+
+            if (id != 0 && name != null && email != null)
             {
-                id,
-                email,
-                name
-            };
-            return Ok(new { user });
+                var user = new
+                {
+                    id,
+                    email,
+                    name
+                };
+                return Ok(new { user });
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         private string CreateToken(User user)
