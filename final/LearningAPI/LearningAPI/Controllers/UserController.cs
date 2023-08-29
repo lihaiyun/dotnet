@@ -118,7 +118,7 @@ namespace LearningAPI.Controllers
                 var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
                     .Select(c => c.Value).SingleOrDefault();
 
-                if (name != null && email != null)
+                if (id != 0 && name != null && email != null)
                 {
                     UserDTO userDTO = new() { Id = id, Name = name, Email = email };
                     AuthResponse response = new() { User = userDTO };
