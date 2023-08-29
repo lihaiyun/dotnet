@@ -68,15 +68,7 @@ namespace LearningAPI.Controllers
             myTutorial.Description = tutorial.Description.Trim();
             myTutorial.UpdatedAt = DateTime.Now;
 
-            _context.Tutorials.Update(myTutorial);
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Technical error");
-            }
+            _context.SaveChanges();
             return Ok();
         }
 

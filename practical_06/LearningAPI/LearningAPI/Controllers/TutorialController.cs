@@ -110,14 +110,7 @@ namespace LearningAPI.Controllers
             myTutorial.ImageFile = tutorial.ImageFile;
             myTutorial.UpdatedAt = DateTime.Now;
 
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Technical error");
-            }
+            _context.SaveChanges();
             return Ok();
         }
 
