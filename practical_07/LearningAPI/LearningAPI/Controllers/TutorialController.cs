@@ -50,99 +50,124 @@ namespace LearningAPI.Controllers
         [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult GetTutorial(int id)
         {
-            Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
-                .FirstOrDefault(t => t.Id == id);
-            if (tutorial == null)
+            try
             {
-                return NotFound();
+                Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
+                .FirstOrDefault(t => t.Id == id);
+                if (tutorial == null)
+                {
+                    return NotFound();
+                }
+                TutorialDTO data = _mapper.Map<TutorialDTO>(tutorial);
+                return Ok(data);
             }
-            TutorialDTO data = _mapper.Map<TutorialDTO>(tutorial);
-            return Ok(data);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when get tutorial by id");
+                return StatusCode(500);
+            }
         }
 
         [HttpPost, Authorize]
         [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
         public IActionResult AddTutorial(AddTutorialRequest tutorial)
         {
-            int userId = GetUserId();
-            var now = DateTime.Now;
-            var myTutorial = new Tutorial()
+            try
             {
-                Title = tutorial.Title.Trim(),
-                Description = tutorial.Description.Trim(),
-                ImageFile = tutorial.ImageFile,
-                CreatedAt = now,
-                UpdatedAt = now,
-                UserId = userId
-            };
+                int userId = GetUserId();
+                var now = DateTime.Now;
+                var myTutorial = new Tutorial()
+                {
+                    Title = tutorial.Title.Trim(),
+                    Description = tutorial.Description.Trim(),
+                    ImageFile = tutorial.ImageFile,
+                    CreatedAt = now,
+                    UpdatedAt = now,
+                    UserId = userId
+                };
 
-            _context.Tutorials.Add(myTutorial);
-            _context.SaveChanges();
+                _context.Tutorials.Add(myTutorial);
+                _context.SaveChanges();
 
-            Tutorial? newTutorial = _context.Tutorials.Include(t => t.User)
+                Tutorial? newTutorial = _context.Tutorials.Include(t => t.User)
                     .FirstOrDefault(t => t.Id == myTutorial.Id);
-            TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(newTutorial);
-            return Ok(tutorialDTO);
+                TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(newTutorial);
+                return Ok(tutorialDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when add tutorial");
+                return StatusCode(500);
+            }
         }
 
         [HttpPut("{id}"), Authorize]
         public IActionResult UpdateTutorial(int id, UpdateTutorialRequest tutorial)
         {
-            var myTutorial = _context.Tutorials.Find(id);
-            if (myTutorial == null)
-            {
-                return NotFound();
-            }
-
-            int userId = GetUserId();
-            if (myTutorial.UserId != userId)
-            {
-                return Forbid();
-            }
-
-            if (tutorial.Title != null)
-            {
-                myTutorial.Title = tutorial.Title.Trim();
-            }
-            if (tutorial.Description != null)
-            {
-                myTutorial.Description = tutorial.Description.Trim();
-            }
-            if (tutorial.ImageFile != null)
-            {
-                myTutorial.ImageFile = tutorial.ImageFile;
-            }
-            myTutorial.UpdatedAt = DateTime.Now;
-
             try
             {
+                var myTutorial = _context.Tutorials.Find(id);
+                if (myTutorial == null)
+                {
+                    return NotFound();
+                }
+
+                int userId = GetUserId();
+                if (myTutorial.UserId != userId)
+                {
+                    return Forbid();
+                }
+
+                if (tutorial.Title != null)
+                {
+                    myTutorial.Title = tutorial.Title.Trim();
+                }
+                if (tutorial.Description != null)
+                {
+                    myTutorial.Description = tutorial.Description.Trim();
+                }
+                if (tutorial.ImageFile != null)
+                {
+                    myTutorial.ImageFile = tutorial.ImageFile;
+                }
+                myTutorial.UpdatedAt = DateTime.Now;
+
                 _context.SaveChanges();
+                return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Technical error");
+                _logger.LogError(ex, "Error when update tutorial");
+                return StatusCode(500);
             }
-            return Ok();
         }
 
         [HttpDelete("{id}"), Authorize]
         public IActionResult DeleteTutorial(int id)
         {
-            var myTutorial = _context.Tutorials.Find(id);
-            if (myTutorial == null)
+            try
             {
-                return NotFound();
-            }
+                var myTutorial = _context.Tutorials.Find(id);
+                if (myTutorial == null)
+                {
+                    return NotFound();
+                }
 
-            int userId = GetUserId();
-            if (myTutorial.UserId != userId)
+                int userId = GetUserId();
+                if (myTutorial.UserId != userId)
+                {
+                    return Forbid();
+                }
+
+                _context.Tutorials.Remove(myTutorial);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
             {
-                return Forbid();
+                _logger.LogError(ex, "Error when delete tutorial");
+                return StatusCode(500);
             }
-
-            _context.Tutorials.Remove(myTutorial);
-            _context.SaveChanges();
-            return Ok();
         }
 
         private int GetUserId()

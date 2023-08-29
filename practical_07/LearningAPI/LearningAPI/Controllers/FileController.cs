@@ -10,29 +10,40 @@ namespace LearningAPI.Controllers
     public class FileController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
+        private readonly ILogger<FileController> _logger;
 
-        public FileController(IWebHostEnvironment environment)
+        public FileController(IWebHostEnvironment environment,
+            ILogger<FileController> logger)
         {
             _environment = environment;
+            _logger = logger;
         }
 
         [HttpPost("upload"), Authorize]
         [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
         public IActionResult Upload(IFormFile file)
         {
-            if (file.Length > 1024 * 1024)
+            try
             {
-                var message = "Maximum file size is 1MB";
-                return BadRequest(new { message });
-            }
+                if (file.Length > 1024 * 1024)
+                {
+                    var message = "Maximum file size is 1MB";
+                    return BadRequest(new { message });
+                }
 
-            var id = Nanoid.Generate(size: 10);
-            var filename = id + Path.GetExtension(file.FileName);
-            var imagePath = Path.Combine(_environment.ContentRootPath, @"wwwroot/uploads", filename);
-            using var fileStream = new FileStream(imagePath, FileMode.Create);
-            file.CopyTo(fileStream);
-            UploadResponse response = new() { Filename = filename };
-            return Ok(response);
+                var id = Nanoid.Generate(size: 10);
+                var filename = id + Path.GetExtension(file.FileName);
+                var imagePath = Path.Combine(_environment.ContentRootPath, @"wwwroot/uploads", filename);
+                using var fileStream = new FileStream(imagePath, FileMode.Create);
+                file.CopyTo(fileStream);
+                UploadResponse response = new() { Filename = filename };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when upload file");
+                return StatusCode(500);
+            }
         }
     }
 }
