@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LearningAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NanoidDotNet;
 
@@ -16,6 +17,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost("upload"), Authorize]
+        [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
         public IActionResult Upload(IFormFile file)
         {
             if (file.Length > 1024 * 1024)
@@ -29,7 +31,8 @@ namespace LearningAPI.Controllers
             var imagePath = Path.Combine(_environment.ContentRootPath, @"wwwroot/uploads", filename);
             using var fileStream = new FileStream(imagePath, FileMode.Create);
             file.CopyTo(fileStream);
-            return Ok(new { filename });
+            UploadResponse response = new() { Filename = filename };
+            return Ok(response);
         }
     }
 }
