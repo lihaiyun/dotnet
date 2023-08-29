@@ -1,4 +1,5 @@
-﻿using LearningAPI.Models;
+﻿using AutoMapper;
+using LearningAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,11 +15,13 @@ namespace LearningAPI.Controllers
     {
         private readonly MyDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public UserController(MyDbContext context, IConfiguration configuration)
+        public UserController(MyDbContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -56,6 +59,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         public IActionResult Login(LoginRequest request)
         {
             // Trim string values
@@ -76,14 +80,10 @@ namespace LearningAPI.Controllers
             }
 
             // Return user info
-            var user = new
-            {
-                foundUser.Id,
-                foundUser.Email,
-                foundUser.Name
-            };
+            UserDTO userDTO = _mapper.Map<UserDTO>(foundUser);
             string accessToken = CreateToken(foundUser);
-            return Ok(new { user, accessToken });
+            LoginResponse response = new() { User = userDTO, AccessToken = accessToken };
+            return Ok(response);
         }
 
         [HttpGet("auth"), Authorize]
