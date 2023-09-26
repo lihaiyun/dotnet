@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Typography, TextField, Button, Grid } from '@mui/material';
 import { FormControl, InputLabel, FormHelperText, Select, MenuItem } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import dayjs from 'dayjs';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // npm install @mui/x-date-pickers
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import dayjs from 'dayjs';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 function MyForm() {
     const formik = useFormik({
         initialValues: {
             title: 'My title',
             description: 'My description',
-            age: 10,
             price: 0,
             option: '',
-            tnc: false,
-            date: dayjs(),
-            time: dayjs().minute(0)
+            date: dayjs().add(1, 'day'),
+            time: dayjs().minute(0),
+            datetime: dayjs().add(1, 'day').minute(0),
+            tnc: false
         },
         validationSchema: yup.object({
             title: yup.string().trim()
@@ -39,11 +40,13 @@ function MyForm() {
             tnc: yup.boolean().oneOf([true], 'Accept Terms & Conditions is required')
         }),
         onSubmit: (data) => {
-            data.title = data.title.trim();
-            data.description = data.description.trim();
-            data.date = data.date.format('YYYY-MM-DD');
-            data.time = data.time.format('HH:mm');
-            console.log(data);
+            // create a new object for submission
+            let dataToSubmit = { ...data };
+            dataToSubmit.title = data.title.trim();
+            dataToSubmit.description = data.description.trim();
+            dataToSubmit.date = data.date.format('YYYY-MM-DD');
+            dataToSubmit.time = data.time.format('HH:mm');
+            console.log(dataToSubmit);
             toast.success('Form submitted successfully');
         }
     });
@@ -54,30 +57,32 @@ function MyForm() {
                 My Example Form
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit}>
-
-                <TextField
-                    fullWidth margin="dense" autoComplete="off"
-                    label="Title"
-                    name="title"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={formik.touched.title && formik.errors.title}
-                />
-                <TextField
-                    fullWidth margin="dense" autoComplete="off"
-                    multiline minRows={2}
-                    label="Description"
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                />
-
                 <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            label="Title"
+                            name="title"
+                            value={formik.values.title}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.title && Boolean(formik.errors.title)}
+                            helperText={formik.touched.title && formik.errors.title}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            multiline minRows={2}
+                            label="Description"
+                            name="description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
+                        />
+                    </Grid>
                     <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth margin="dense" autoComplete="off"
@@ -113,7 +118,7 @@ function MyForm() {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth margin="dense">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker format="DD/MM/YYYY"
                                     label="Select Date"
@@ -125,7 +130,7 @@ function MyForm() {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth margin="dense">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <TimePicker
                                     label="Select Time"
@@ -136,19 +141,31 @@ function MyForm() {
                             </LocalizationProvider>
                         </FormControl>
                     </Grid>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth margin="dense">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DateTimePicker format="DD/MM/YYYY hh:mm A"
+                                    label="Select Date Time"
+                                    name="datetime"
+                                    value={formik.values.datetime}
+                                    onChange={(datetime) => formik.setFieldValue('datetime', datetime)}
+                                    onBlur={() => formik.setFieldTouched('datetime', true)} />
+                            </LocalizationProvider>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth margin="dense"
+                            error={formik.touched.tnc && Boolean(formik.errors.tnc)}>
+                            <FormControlLabel control={
+                                <Checkbox name="tnc"
+                                    checked={formik.values.tnc}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur} />
+                            } label="I Accept Terms & Conditions" />
+                            <FormHelperText>{formik.touched.tnc && formik.errors.tnc}</FormHelperText>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-
-                <FormControl fullWidth margin="dense"
-                    error={formik.touched.tnc && Boolean(formik.errors.tnc)}>
-                    <FormControlLabel control={
-                        <Checkbox name="tnc"
-                            checked={formik.values.tnc}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur} />
-                    } label="I Accept Terms & Conditions" />
-                    <FormHelperText>{formik.touched.tnc && formik.errors.tnc}</FormHelperText>
-                </FormControl>
-
                 <Box sx={{ mt: 2 }}>
                     <Button variant="contained" type="submit">
                         Submit
