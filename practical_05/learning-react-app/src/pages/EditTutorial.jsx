@@ -14,10 +14,12 @@ function EditTutorial() {
         title: "",
         description: ""
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         http.get(`/tutorial/${id}`).then((res) => {
             setTutorial(res.data);
+            setLoading(false);
         });
     }, []);
 
@@ -68,38 +70,42 @@ function EditTutorial() {
             <Typography variant="h5" sx={{ my: 2 }}>
                 Edit Tutorial
             </Typography>
-            <Box component="form" onSubmit={formik.handleSubmit}>
-                <TextField
-                    fullWidth margin="dense" autoComplete="off"
-                    label="Title"
-                    name="title"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={formik.touched.title && formik.errors.title}
-                />
-                <TextField
-                    fullWidth margin="dense" autoComplete="off"
-                    multiline minRows={2}
-                    label="Description"
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                />
-                <Box sx={{ mt: 2 }}>
-                    <Button variant="contained" type="submit">
-                        Update
-                    </Button>
-                    <Button variant="contained" sx={{ ml: 2 }} color="error"
-                        onClick={handleOpen}>
-                        Delete
-                    </Button>
-                </Box>
-            </Box>
+            {
+                !loading && (
+                    <Box component="form" onSubmit={formik.handleSubmit}>
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            label="Title"
+                            name="title"
+                            value={formik.values.title}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.title && Boolean(formik.errors.title)}
+                            helperText={formik.touched.title && formik.errors.title}
+                        />
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            multiline minRows={2}
+                            label="Description"
+                            name="description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
+                        />
+                        <Box sx={{ mt: 2 }}>
+                            <Button variant="contained" type="submit">
+                                Update
+                            </Button>
+                            <Button variant="contained" sx={{ ml: 2 }} color="error"
+                                onClick={handleOpen}>
+                                Delete
+                            </Button>
+                        </Box>
+                    </Box>
+                )
+            }
 
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>

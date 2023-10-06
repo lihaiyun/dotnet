@@ -17,11 +17,13 @@ function EditTutorial() {
         description: ""
     });
     const [imageFile, setImageFile] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         http.get(`/tutorial/${id}`).then((res) => {
             setTutorial(res.data);
             setImageFile(res.data.imageFile);
+            setLoading(false);
         });
     }, []);
 
@@ -99,60 +101,64 @@ function EditTutorial() {
             <Typography variant="h5" sx={{ my: 2 }}>
                 Edit Tutorial
             </Typography>
-            <Box component="form" onSubmit={formik.handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <TextField
-                            fullWidth margin="dense" autoComplete="off"
-                            label="Title"
-                            name="title"
-                            value={formik.values.title}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.title && Boolean(formik.errors.title)}
-                            helperText={formik.touched.title && formik.errors.title}
-                        />
-                        <TextField
-                            fullWidth margin="dense" autoComplete="off"
-                            multiline minRows={2}
-                            label="Description"
-                            name="description"
-                            value={formik.values.description}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.description && Boolean(formik.errors.description)}
-                            helperText={formik.touched.description && formik.errors.description}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={4}>
-                        <Box sx={{ textAlign: 'center', mt: 2 }} >
-                            <Button variant="contained" component="label">
-                                Upload Image
-                                <input hidden accept="image/*" multiple type="file"
-                                    onChange={onFileChange} />
+            {
+                !loading && (
+                    <Box component="form" onSubmit={formik.handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} md={6} lg={8}>
+                                <TextField
+                                    fullWidth margin="dense" autoComplete="off"
+                                    label="Title"
+                                    name="title"
+                                    value={formik.values.title}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.title && Boolean(formik.errors.title)}
+                                    helperText={formik.touched.title && formik.errors.title}
+                                />
+                                <TextField
+                                    fullWidth margin="dense" autoComplete="off"
+                                    multiline minRows={2}
+                                    label="Description"
+                                    name="description"
+                                    value={formik.values.description}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.description && Boolean(formik.errors.description)}
+                                    helperText={formik.touched.description && formik.errors.description}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6} lg={4}>
+                                <Box sx={{ textAlign: 'center', mt: 2 }} >
+                                    <Button variant="contained" component="label">
+                                        Upload Image
+                                        <input hidden accept="image/*" multiple type="file"
+                                            onChange={onFileChange} />
+                                    </Button>
+                                    {
+                                        imageFile && (
+                                            <Box className="aspect-ratio-container" sx={{ mt: 2 }}>
+                                                <img alt="tutorial"
+                                                    src={`${import.meta.env.VITE_FILE_BASE_URL}${imageFile}`}>
+                                                </img>
+                                            </Box>
+                                        )
+                                    }
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        <Box sx={{ mt: 2 }}>
+                            <Button variant="contained" type="submit">
+                                Update
                             </Button>
-                            {
-                                imageFile && (
-                                    <Box className="aspect-ratio-container" sx={{ mt: 2 }}>
-                                        <img alt="tutorial"
-                                            src={`${import.meta.env.VITE_FILE_BASE_URL}${imageFile}`}>
-                                        </img>
-                                    </Box>
-                                )
-                            }
+                            <Button variant="contained" sx={{ ml: 2 }} color="error"
+                                onClick={handleOpen}>
+                                Delete
+                            </Button>
                         </Box>
-                    </Grid>
-                </Grid>
-                <Box sx={{ mt: 2 }}>
-                    <Button variant="contained" type="submit">
-                        Update
-                    </Button>
-                    <Button variant="contained" sx={{ ml: 2 }} color="error"
-                        onClick={handleOpen}>
-                        Delete
-                    </Button>
-                </Box>
-            </Box>
+                    </Box>
+                )
+            }
 
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>

@@ -1,5 +1,5 @@
 const global = {
-    datetimeFormat: 'D MMM YYYY HH:mm'
+    datetimeFormat: 'D MMM YYYY h:mm A'
 }
 
 export default global;

@@ -88,103 +88,101 @@ function MyForm() {
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth margin="dense" autoComplete="off"
-                                    label="Title"
-                                    name="title"
-                                    value={formik.values.title}
+                    <Grid item xs={12} md={6} lg={8} container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth margin="dense" autoComplete="off"
+                                label="Title"
+                                name="title"
+                                value={formik.values.title}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.title && Boolean(formik.errors.title)}
+                                helperText={formik.touched.title && formik.errors.title}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth margin="dense" autoComplete="off"
+                                multiline minRows={2}
+                                label="Description"
+                                name="description"
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.description && Boolean(formik.errors.description)}
+                                helperText={formik.touched.description && formik.errors.description}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth margin="dense" autoComplete="off"
+                                type="number"
+                                inputProps={{
+                                    min: 0,
+                                    step: 0.1,
+                                }}
+                                label="Price"
+                                name="price"
+                                value={formik.values.price}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.price && Boolean(formik.errors.price)}
+                                helperText={formik.touched.price && formik.errors.price} />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth margin="dense"
+                                error={formik.touched.option && Boolean(formik.errors.option)}>
+                                <InputLabel>Option</InputLabel>
+                                <Select label="Option"
+                                    name="option"
+                                    value={formik.values.option}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.title && Boolean(formik.errors.title)}
-                                    helperText={formik.touched.title && formik.errors.title}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth margin="dense" autoComplete="off"
-                                    multiline minRows={2}
-                                    label="Description"
-                                    name="description"
-                                    value={formik.values.description}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.description && Boolean(formik.errors.description)}
-                                    helperText={formik.touched.description && formik.errors.description}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField
-                                    fullWidth margin="dense" autoComplete="off"
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                        step: 0.1,
-                                    }}
-                                    label="Price"
-                                    name="price"
-                                    value={formik.values.price}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.price && Boolean(formik.errors.price)}
-                                    helperText={formik.touched.price && formik.errors.price} />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <FormControl fullWidth margin="dense"
-                                    error={formik.touched.option && Boolean(formik.errors.option)}>
-                                    <InputLabel>Option</InputLabel>
-                                    <Select label="Option"
-                                        name="option"
-                                        value={formik.values.option}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                    >
-                                        <MenuItem value={'A'}>Option A</MenuItem>
-                                        <MenuItem value={'B'}>Option B</MenuItem>
-                                        <MenuItem value={'C'}>Option C</MenuItem>
-                                        <MenuItem value={'D'}>Option D</MenuItem>
-                                    </Select>
-                                    <FormHelperText>{formik.touched.option && formik.errors.option}</FormHelperText>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <FormControl fullWidth margin="dense">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker format="DD/MM/YYYY"
-                                            label="Select Date"
-                                            name="date"
-                                            value={formik.values.date}
-                                            onChange={(date) => formik.setFieldValue('date', date)}
-                                            onBlur={() => formik.setFieldTouched('date', true)} />
-                                    </LocalizationProvider>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <FormControl fullWidth margin="dense">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="Select Time"
-                                            name="time"
-                                            value={formik.values.time}
-                                            onChange={(time) => formik.setFieldValue('time', time)}
-                                            onBlur={() => formik.setFieldTouched('time', true)} />
-                                    </LocalizationProvider>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth margin="dense">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateTimePicker format="DD/MM/YYYY hh:mm A"
-                                            label="Select Date Time"
-                                            name="datetime"
-                                            value={formik.values.datetime}
-                                            onChange={(datetime) => formik.setFieldValue('datetime', datetime)}
-                                            onBlur={() => formik.setFieldTouched('datetime', true)} />
-                                    </LocalizationProvider>
-                                </FormControl>
-                            </Grid>
+                                >
+                                    <MenuItem value={'A'}>Option A</MenuItem>
+                                    <MenuItem value={'B'}>Option B</MenuItem>
+                                    <MenuItem value={'C'}>Option C</MenuItem>
+                                    <MenuItem value={'D'}>Option D</MenuItem>
+                                </Select>
+                                <FormHelperText>{formik.touched.option && formik.errors.option}</FormHelperText>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth margin="dense">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker format="DD/MM/YYYY"
+                                        label="Select Date"
+                                        name="date"
+                                        value={formik.values.date}
+                                        onChange={(date) => formik.setFieldValue('date', date)}
+                                        onBlur={() => formik.setFieldTouched('date', true)} />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth margin="dense">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label="Select Time"
+                                        name="time"
+                                        value={formik.values.time}
+                                        onChange={(time) => formik.setFieldValue('time', time)}
+                                        onBlur={() => formik.setFieldTouched('time', true)} />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth margin="dense">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateTimePicker format="DD/MM/YYYY hh:mm A"
+                                        label="Select Date Time"
+                                        name="datetime"
+                                        value={formik.values.datetime}
+                                        onChange={(datetime) => formik.setFieldValue('datetime', datetime)}
+                                        onBlur={() => formik.setFieldTouched('datetime', true)} />
+                                </LocalizationProvider>
+                            </FormControl>
                         </Grid>
                     </Grid>
 
