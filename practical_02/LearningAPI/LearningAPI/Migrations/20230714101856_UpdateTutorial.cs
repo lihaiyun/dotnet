@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,6 +11,14 @@ namespace LearningAPI.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedAt",
+                table: "Tutorials",
+                type: "datetime",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime(6)");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Tutorials",
@@ -27,11 +36,27 @@ namespace LearningAPI.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "longtext");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedAt",
+                table: "Tutorials",
+                type: "datetime",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime(6)");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedAt",
+                table: "Tutorials",
+                type: "datetime(6)",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Tutorials",
@@ -49,6 +74,14 @@ namespace LearningAPI.Migrations
                 oldClrType: typeof(string),
                 oldType: "varchar(500)",
                 oldMaxLength: 500);
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedAt",
+                table: "Tutorials",
+                type: "datetime(6)",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime");
         }
     }
 }
