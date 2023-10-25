@@ -23,11 +23,11 @@ function MyForm() {
             title: 'My title',
             description: 'My description',
             price: 0,
-            option: '',
+            option: 'A',
             date: dayjs().add(1, 'day'),
             time: dayjs().minute(0),
             datetime: dayjs().add(1, 'day').minute(0),
-            tnc: false
+            tnc: true
         },
         validationSchema: yup.object({
             title: yup.string().trim()
@@ -40,6 +40,9 @@ function MyForm() {
                 .required('Description is required'),
             price: yup.number().min(0).required('Price is required'),
             option: yup.string().required('Option is required'),
+            date: yup.date().typeError('Invalid date').required('Date is required'),
+            time: yup.date().typeError('Invalid time').required('Time is required'),
+            datetime: yup.date().typeError('Invalid date time').required('Date Time is required'),
             tnc: yup.boolean().oneOf([true], 'Accept Terms & Conditions is required')
         }),
         onSubmit: (data) => {
@@ -156,7 +159,14 @@ function MyForm() {
                                         name="date"
                                         value={formik.values.date}
                                         onChange={(date) => formik.setFieldValue('date', date)}
-                                        onBlur={() => formik.setFieldTouched('date', true)} />
+                                        onBlur={() => formik.setFieldTouched('date', true)}
+                                        slotProps={{
+                                            textField: {
+                                                error: formik.touched.date && Boolean(formik.errors.date),
+                                                helperText: formik.touched.date && formik.errors.date
+                                            }
+                                        }}
+                                    />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
@@ -168,7 +178,13 @@ function MyForm() {
                                         name="time"
                                         value={formik.values.time}
                                         onChange={(time) => formik.setFieldValue('time', time)}
-                                        onBlur={() => formik.setFieldTouched('time', true)} />
+                                        onBlur={() => formik.setFieldTouched('time', true)}
+                                        slotProps={{
+                                            textField: {
+                                                error: formik.touched.time && Boolean(formik.errors.time),
+                                                helperText: formik.touched.time && formik.errors.time
+                                            }
+                                        }} />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
@@ -180,7 +196,13 @@ function MyForm() {
                                         name="datetime"
                                         value={formik.values.datetime}
                                         onChange={(datetime) => formik.setFieldValue('datetime', datetime)}
-                                        onBlur={() => formik.setFieldTouched('datetime', true)} />
+                                        onBlur={() => formik.setFieldTouched('datetime', true)}
+                                        slotProps={{
+                                            textField: {
+                                                error: formik.touched.datetime && Boolean(formik.errors.datetime),
+                                                helperText: formik.touched.datetime && formik.errors.datetime
+                                            }
+                                        }} />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
