@@ -10,3 +10,7 @@ obj/
 
 # Mac OS
 .DS_Store
+
+# project's static files in wwwroot
+LearningAPI/wwwroot/uploads/*
+!LearningAPI/wwwroot/uploads/README.md
