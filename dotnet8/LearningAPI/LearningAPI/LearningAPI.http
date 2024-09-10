@@ -35,6 +35,10 @@ Content-Type: application/json
 
 ###
 
+GET {{LearningAPI_HostAddress}}/user/auth
+Authorization: Bearer {{token}}
+
+###
 POST {{LearningAPI_HostAddress}}/tutorial
 Content-Type: application/json
 Authorization: Bearer {{token}}
