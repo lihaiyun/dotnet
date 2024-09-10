@@ -8,6 +8,10 @@ builder.Services.AddDbContext<MyDbContext>();
 
 // Add CORS policy
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    throw new Exception("AllowedOrigins is required for CORS policy.");
+}
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(

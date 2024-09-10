@@ -1,0 +1,33 @@
+﻿@LearningAPI_HostAddress = https://localhost:7004
+
+GET {{LearningAPI_HostAddress}}/tutorial?search=my
+
+###
+
+POST {{LearningAPI_HostAddress}}/tutorial
+Content-Type: application/json
+
+{
+ "title": "Web API",
+ "description": "Happy coding :)"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/tutorial/1
+
+###
+
+PUT {{LearningAPI_HostAddress}}/tutorial/2
+Content-Type: application/json
+
+{
+ "title": "My Story",
+ "description": "Your Song ❤"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/tutorial/3
+
+###
