@@ -1,0 +1,20 @@
+﻿@LearningAPI_HostAddress = https://localhost:7004
+
+GET {{LearningAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{LearningAPI_HostAddress}}/tutorial
+
+###
+
+POST {{LearningAPI_HostAddress}}/tutorial
+Content-Type: application/json
+
+{
+ "title": "Web API",
+ "description": "Happy coding :)"
+}
+
+###

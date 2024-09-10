@@ -7,7 +7,7 @@ namespace LearningAPI.Controllers
     [Route("[controller]")]
     public class TutorialController : ControllerBase
     {
-        private static readonly List<Tutorial> list = new();
+        private static readonly List<Tutorial> list = [];
 
         [HttpGet]
         public IActionResult GetAll()
