@@ -7,17 +7,11 @@ namespace LearningAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class FileController : ControllerBase
+    public class FileController(IWebHostEnvironment environment,
+        ILogger<FileController> logger) : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
-        private readonly ILogger<FileController> _logger;
-
-        public FileController(IWebHostEnvironment environment,
-            ILogger<FileController> logger)
-        {
-            _environment = environment;
-            _logger = logger;
-        }
+        private readonly IWebHostEnvironment _environment = environment;
+        private readonly ILogger<FileController> _logger = logger;
 
         [HttpPost("upload"), Authorize]
         [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]

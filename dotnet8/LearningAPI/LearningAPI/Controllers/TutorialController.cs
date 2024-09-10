@@ -9,19 +9,12 @@ namespace LearningAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TutorialController : ControllerBase
+    public class TutorialController(MyDbContext context, IMapper mapper,
+        ILogger<TutorialController> logger) : ControllerBase
     {
-        private readonly MyDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<TutorialController> _logger;
-
-        public TutorialController(MyDbContext context, IMapper mapper, 
-            ILogger<TutorialController> logger)
-        {
-            _context = context;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly MyDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<TutorialController> _logger = logger;
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
