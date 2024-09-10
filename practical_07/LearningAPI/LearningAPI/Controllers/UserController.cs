@@ -11,21 +11,13 @@ namespace LearningAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UserController(MyDbContext context, IConfiguration configuration, IMapper mapper,
+        ILogger<UserController> logger) : ControllerBase
     {
-        private readonly MyDbContext _context;
-        private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UserController> _logger;
-
-        public UserController(MyDbContext context, IConfiguration configuration, IMapper mapper,
-            ILogger<UserController> logger)
-        {
-            _context = context;
-            _configuration = configuration;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly MyDbContext _context = context;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<UserController> _logger = logger;
 
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
@@ -138,7 +130,12 @@ namespace LearningAPI.Controllers
 
         private string CreateToken(User user)
         {
-            string secret = _configuration.GetValue<string>("Authentication:Secret");
+            var secret = _configuration.GetValue<string>("Authentication:Secret");
+            if (string.IsNullOrEmpty(secret))
+            {
+                throw new Exception("Secret is required for JWT authentication.");
+            }
+
             int tokenExpiresDays = _configuration.GetValue<int>("Authentication:TokenExpiresDays");
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -146,12 +143,12 @@ namespace LearningAPI.Controllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+                Subject = new ClaimsIdentity(
+                [
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email)
-                }),
+                ]),
                 Expires = DateTime.UtcNow.AddDays(tokenExpiresDays),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
