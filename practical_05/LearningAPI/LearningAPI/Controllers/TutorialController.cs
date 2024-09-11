@@ -8,14 +8,9 @@ namespace LearningAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TutorialController : ControllerBase
+    public class TutorialController(MyDbContext context) : ControllerBase
     {
-        private readonly MyDbContext _context;
-
-        public TutorialController(MyDbContext context)
-        {
-            _context = context;
-        }
+        private readonly MyDbContext _context = context;
 
         [HttpGet]
         public IActionResult GetAll(string? search)

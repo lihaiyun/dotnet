@@ -1,0 +1,64 @@
+﻿@LearningAPI_HostAddress = https://localhost:7004
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJMaSBIYWl5dW4iLCJlbWFpbCI6ImxpX2hhaXl1bkBueXAuZWR1LnNnIiwibmJmIjoxNzI2MDQxNjY1LCJleHAiOjE3Mjg2MzM2NjUsImlhdCI6MTcyNjA0MTY2NX0.JTnIH-cX630TZiYIZt1_u1VwGJeC0MQ-rh4SX1iRjaA
+
+GET {{LearningAPI_HostAddress}}/tutorial?search=
+
+###
+
+POST {{LearningAPI_HostAddress}}/tutorial
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+ "title": "My tutorial",
+ "description": "by Haiyun"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/tutorial/1
+
+###
+
+PUT {{LearningAPI_HostAddress}}/tutorial/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+ "title": "My Story",
+ "description": "Your Song ❤"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/tutorial/3
+Authorization: Bearer {{token}}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/register
+Content-Type: application/json
+
+{
+ "name": "Li Haiyun",
+ "email": "li_haiyun@nyp.edu.sg",
+ "password": "password123"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+ "email": "li_haiyun@nyp.edu.sg",
+ "password": "password123"
+}
+
+
+###
+
+GET {{LearningAPI_HostAddress}}/user/auth
+Authorization: Bearer {{token}}
+
+###
