@@ -9,16 +9,10 @@ namespace LearningAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UserController(MyDbContext context, IConfiguration configuration) : ControllerBase
     {
-        private readonly MyDbContext _context;
-        private readonly IConfiguration _configuration;
-
-        public UserController(MyDbContext context, IConfiguration configuration)
-        {
-            _context = context;
-            _configuration = configuration;
-        }
+        private readonly MyDbContext _context = context;
+        private readonly IConfiguration _configuration = configuration;
 
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
@@ -87,7 +81,11 @@ namespace LearningAPI.Controllers
 
         private string CreateToken(User user)
         {
-            string secret = _configuration.GetValue<string>("Authentication:Secret");
+            string? secret = _configuration.GetValue<string>("Authentication:Secret");
+            if (string.IsNullOrEmpty(secret))
+            {
+                throw new Exception("Secret is required for JWT authentication.");
+            }
             int tokenExpiresDays = _configuration.GetValue<int>("Authentication:TokenExpiresDays");
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -95,12 +93,12 @@ namespace LearningAPI.Controllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+                Subject = new ClaimsIdentity(
+                [
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email)
-                }),
+                ]),
                 Expires = DateTime.UtcNow.AddDays(tokenExpiresDays),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
