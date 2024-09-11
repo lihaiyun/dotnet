@@ -12,6 +12,10 @@ builder.Services.AddDbContext<MyDbContext>();
 
 // Add CORS policy
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    throw new Exception("AllowedOrigins is required for CORS policy.");
+}
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -25,6 +29,10 @@ builder.Services.AddCors(options =>
 
 // Authentication
 var secret = builder.Configuration.GetValue<string>("Authentication:Secret");
+if (string.IsNullOrEmpty(secret))
+{
+    throw new Exception("Secret is required for JWT authentication.");
+}
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

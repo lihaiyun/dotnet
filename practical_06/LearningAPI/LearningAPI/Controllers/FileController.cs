@@ -6,14 +6,9 @@ namespace LearningAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class FileController : ControllerBase
+    public class FileController(IWebHostEnvironment environment) : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
-
-        public FileController(IWebHostEnvironment environment)
-        {
-            _environment = environment;
-        }
+        private readonly IWebHostEnvironment _environment = environment;
 
         [HttpPost("upload"), Authorize]
         public IActionResult Upload(IFormFile file)
