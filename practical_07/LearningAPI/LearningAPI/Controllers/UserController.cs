@@ -130,7 +130,7 @@ namespace LearningAPI.Controllers
 
         private string CreateToken(User user)
         {
-            var secret = _configuration.GetValue<string>("Authentication:Secret");
+            string? secret = _configuration.GetValue<string>("Authentication:Secret");
             if (string.IsNullOrEmpty(secret))
             {
                 throw new Exception("Secret is required for JWT authentication.");
