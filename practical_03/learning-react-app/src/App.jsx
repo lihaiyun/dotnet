@@ -21,6 +21,7 @@ function App() {
                 </Typography>
               </Link>
               <Link to="/tutorials" ><Typography>Tutorials</Typography></Link>
+              <Link to="/form" ><Typography>Form</Typography></Link>
             </Toolbar>
           </Container>
         </AppBar>

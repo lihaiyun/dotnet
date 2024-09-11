@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid2 as Grid } from '@mui/material';
 import { FormControl, InputLabel, FormHelperText, Select, MenuItem } from '@mui/material';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useFormik } from 'formik';
@@ -61,7 +61,7 @@ function MyForm() {
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={{xs:12}}>
                         <TextField
                             fullWidth margin="dense" autoComplete="off"
                             label="Title"
@@ -73,7 +73,7 @@ function MyForm() {
                             helperText={formik.touched.title && formik.errors.title}
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{xs:12}}>
                         <TextField
                             fullWidth margin="dense" autoComplete="off"
                             multiline minRows={2}
@@ -86,7 +86,7 @@ function MyForm() {
                             helperText={formik.touched.description && formik.errors.description}
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{xs:12, md:6}}>
                         <TextField
                             fullWidth margin="dense" autoComplete="off"
                             type="number"
@@ -102,7 +102,7 @@ function MyForm() {
                             error={formik.touched.price && Boolean(formik.errors.price)}
                             helperText={formik.touched.price && formik.errors.price} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{xs:12, md:6}}>
                         <FormControl fullWidth margin="dense"
                             error={formik.touched.option && Boolean(formik.errors.option)}>
                             <InputLabel>Option</InputLabel>
@@ -120,7 +120,7 @@ function MyForm() {
                             <FormHelperText>{formik.touched.option && formik.errors.option}</FormHelperText>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{xs:12, md:6}}>
                         <FormControl fullWidth margin="dense">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker format="DD/MM/YYYY"
@@ -139,7 +139,7 @@ function MyForm() {
                             </LocalizationProvider>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{xs:12, md:6}}>
                         <FormControl fullWidth margin="dense">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <TimePicker
@@ -157,7 +157,7 @@ function MyForm() {
                             </LocalizationProvider>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{xs:12}}>
                         <FormControl fullWidth margin="dense">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateTimePicker format="DD/MM/YYYY hh:mm A"
@@ -175,7 +175,7 @@ function MyForm() {
                             </LocalizationProvider>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{xs:12}}>
                         <FormControl fullWidth margin="dense"
                             error={formik.touched.tnc && Boolean(formik.errors.tnc)}>
                             <FormControlLabel control={
