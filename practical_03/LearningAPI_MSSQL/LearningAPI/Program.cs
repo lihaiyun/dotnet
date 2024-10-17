@@ -37,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Use CORS policy before other middleware
 app.UseCors();
 
 app.UseAuthorization();
