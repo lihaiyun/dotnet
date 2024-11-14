@@ -14,11 +14,6 @@ namespace LearningAPI.Controllers
     public class UserController(MyDbContext context, IConfiguration configuration, IMapper mapper,
         ILogger<UserController> logger) : ControllerBase
     {
-        private readonly MyDbContext _context = context;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly IMapper _mapper = mapper;
-        private readonly ILogger<UserController> _logger = logger;
-
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
@@ -30,7 +25,7 @@ namespace LearningAPI.Controllers
                 request.Password = request.Password.Trim();
 
                 // Check email
-                var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                var foundUser = context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
                 if (foundUser != null)
                 {
                     string message = "Email already exists.";
@@ -50,13 +45,13 @@ namespace LearningAPI.Controllers
                 };
 
                 // Add user
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                context.Users.Add(user);
+                context.SaveChanges();
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when user register");
+                logger.LogError(ex, "Error when user register");
                 return StatusCode(500);
             }
         }
@@ -73,7 +68,7 @@ namespace LearningAPI.Controllers
 
                 // Check email and password
                 string message = "Email or password is not correct.";
-                var foundUser = _context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                var foundUser = context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
                 if (foundUser == null)
                 {
                     return BadRequest(new { message });
@@ -85,14 +80,14 @@ namespace LearningAPI.Controllers
                 }
 
                 // Return user info
-                UserDTO userDTO = _mapper.Map<UserDTO>(foundUser);
+                UserDTO userDTO = mapper.Map<UserDTO>(foundUser);
                 string accessToken = CreateToken(foundUser);
                 LoginResponse response = new() { User = userDTO, AccessToken = accessToken };
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when user login");
+                logger.LogError(ex, "Error when user login");
                 return StatusCode(500);
             }
         }
@@ -123,20 +118,20 @@ namespace LearningAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when user auth");
+                logger.LogError(ex, "Error when user auth");
                 return StatusCode(500);
             }
         }
 
         private string CreateToken(User user)
         {
-            string? secret = _configuration.GetValue<string>("Authentication:Secret");
+            string? secret = configuration.GetValue<string>("Authentication:Secret");
             if (string.IsNullOrEmpty(secret))
             {
                 throw new Exception("Secret is required for JWT authentication.");
             }
 
-            int tokenExpiresDays = _configuration.GetValue<int>("Authentication:TokenExpiresDays");
+            int tokenExpiresDays = configuration.GetValue<int>("Authentication:TokenExpiresDays");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);

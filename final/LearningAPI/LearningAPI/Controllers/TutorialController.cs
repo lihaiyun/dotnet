@@ -12,29 +12,25 @@ namespace LearningAPI.Controllers
     public class TutorialController(MyDbContext context, IMapper mapper,
         ILogger<TutorialController> logger) : ControllerBase
     {
-        private readonly MyDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
-        private readonly ILogger<TutorialController> _logger = logger;
-
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
         public IActionResult GetAll(string? search)
         {
             try
             {
-                IQueryable<Tutorial> result = _context.Tutorials.Include(t => t.User);
+                IQueryable<Tutorial> result = context.Tutorials.Include(t => t.User);
                 if (search != null)
                 {
                     result = result.Where(x => x.Title.Contains(search)
                         || x.Description.Contains(search));
                 }
                 var list = result.OrderByDescending(x => x.CreatedAt).ToList();
-                IEnumerable<TutorialDTO> data = list.Select(t => _mapper.Map<TutorialDTO>(t));
+                IEnumerable<TutorialDTO> data = list.Select(t => mapper.Map<TutorialDTO>(t));
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when get all tutorials");
+                logger.LogError(ex, "Error when get all tutorials");
                 return StatusCode(500);
             }
         }
@@ -45,18 +41,18 @@ namespace LearningAPI.Controllers
         {
             try
             {
-                Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
+                Tutorial? tutorial = context.Tutorials.Include(t => t.User)
                 .FirstOrDefault(t => t.Id == id);
                 if (tutorial == null)
                 {
                     return NotFound();
                 }
-                TutorialDTO data = _mapper.Map<TutorialDTO>(tutorial);
+                TutorialDTO data = mapper.Map<TutorialDTO>(tutorial);
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when get tutorial by id");
+                logger.LogError(ex, "Error when get tutorial by id");
                 return StatusCode(500);
             }
         }
@@ -79,17 +75,17 @@ namespace LearningAPI.Controllers
                     UserId = userId
                 };
 
-                _context.Tutorials.Add(myTutorial);
-                _context.SaveChanges();
+                context.Tutorials.Add(myTutorial);
+                context.SaveChanges();
 
-                Tutorial? newTutorial = _context.Tutorials.Include(t => t.User)
+                Tutorial? newTutorial = context.Tutorials.Include(t => t.User)
                     .FirstOrDefault(t => t.Id == myTutorial.Id);
-                TutorialDTO tutorialDTO = _mapper.Map<TutorialDTO>(newTutorial);
+                TutorialDTO tutorialDTO = mapper.Map<TutorialDTO>(newTutorial);
                 return Ok(tutorialDTO);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when add tutorial");
+                logger.LogError(ex, "Error when add tutorial");
                 return StatusCode(500);
             }
         }
@@ -99,7 +95,7 @@ namespace LearningAPI.Controllers
         {
             try
             {
-                var myTutorial = _context.Tutorials.Find(id);
+                var myTutorial = context.Tutorials.Find(id);
                 if (myTutorial == null)
                 {
                     return NotFound();
@@ -125,12 +121,12 @@ namespace LearningAPI.Controllers
                 }
                 myTutorial.UpdatedAt = DateTime.Now;
 
-                _context.SaveChanges();
+                context.SaveChanges();
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when update tutorial");
+                logger.LogError(ex, "Error when update tutorial");
                 return StatusCode(500);
             }
         }
@@ -140,7 +136,7 @@ namespace LearningAPI.Controllers
         {
             try
             {
-                var myTutorial = _context.Tutorials.Find(id);
+                var myTutorial = context.Tutorials.Find(id);
                 if (myTutorial == null)
                 {
                     return NotFound();
@@ -152,13 +148,13 @@ namespace LearningAPI.Controllers
                     return Forbid();
                 }
 
-                _context.Tutorials.Remove(myTutorial);
-                _context.SaveChanges();
+                context.Tutorials.Remove(myTutorial);
+                context.SaveChanges();
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when delete tutorial");
+                logger.LogError(ex, "Error when delete tutorial");
                 return StatusCode(500);
             }
         }
