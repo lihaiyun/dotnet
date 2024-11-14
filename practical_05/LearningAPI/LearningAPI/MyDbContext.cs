@@ -16,8 +16,8 @@ namespace LearningAPI
             }
         }
 
-        public DbSet<Tutorial> Tutorials { get; set; }
+        public required DbSet<Tutorial> Tutorials { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public required DbSet<User> Users { get; set; }
     }
 }
