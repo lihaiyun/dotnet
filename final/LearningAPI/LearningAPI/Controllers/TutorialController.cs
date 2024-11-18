@@ -14,7 +14,7 @@ namespace LearningAPI.Controllers
     {
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<TutorialDTO>), StatusCodes.Status200OK)]
-        public IActionResult GetAll(string? search)
+        public async Task<IActionResult> GetAll(string? search)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace LearningAPI.Controllers
                     result = result.Where(x => x.Title.Contains(search)
                         || x.Description.Contains(search));
                 }
-                var list = result.OrderByDescending(x => x.CreatedAt).ToList();
+                var list = await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
                 IEnumerable<TutorialDTO> data = list.Select(t => mapper.Map<TutorialDTO>(t));
                 return Ok(data);
             }
@@ -37,12 +37,12 @@ namespace LearningAPI.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
-        public IActionResult GetTutorial(int id)
+        public async Task<IActionResult> GetTutorial(int id)
         {
             try
             {
-                Tutorial? tutorial = context.Tutorials.Include(t => t.User)
-                .SingleOrDefault(t => t.Id == id);
+                Tutorial? tutorial = await context.Tutorials.Include(t => t.User)
+                .SingleOrDefaultAsync(t => t.Id == id);
                 if (tutorial == null)
                 {
                     return NotFound();
@@ -59,7 +59,7 @@ namespace LearningAPI.Controllers
 
         [HttpPost, Authorize]
         [ProducesResponseType(typeof(TutorialDTO), StatusCodes.Status200OK)]
-        public IActionResult AddTutorial(AddTutorialRequest tutorial)
+        public async Task<IActionResult> AddTutorial(AddTutorialRequest tutorial)
         {
             try
             {
@@ -75,8 +75,8 @@ namespace LearningAPI.Controllers
                     UserId = userId
                 };
 
-                context.Tutorials.Add(myTutorial);
-                context.SaveChanges();
+                await context.Tutorials.AddAsync(myTutorial);
+                await context.SaveChangesAsync();
 
                 Tutorial? newTutorial = context.Tutorials.Include(t => t.User)
                     .FirstOrDefault(t => t.Id == myTutorial.Id);
@@ -91,11 +91,11 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPut("{id}"), Authorize]
-        public IActionResult UpdateTutorial(int id, UpdateTutorialRequest tutorial)
+        public async Task<IActionResult> UpdateTutorial(int id, UpdateTutorialRequest tutorial)
         {
             try
             {
-                var myTutorial = context.Tutorials.Find(id);
+                var myTutorial = await context.Tutorials.FindAsync(id);
                 if (myTutorial == null)
                 {
                     return NotFound();
@@ -121,7 +121,7 @@ namespace LearningAPI.Controllers
                 }
                 myTutorial.UpdatedAt = DateTime.Now;
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception ex)
@@ -132,7 +132,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpDelete("{id}"), Authorize]
-        public IActionResult DeleteTutorial(int id)
+        public async Task<IActionResult> DeleteTutorial(int id)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace LearningAPI.Controllers
                 }
 
                 context.Tutorials.Remove(myTutorial);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception ex)

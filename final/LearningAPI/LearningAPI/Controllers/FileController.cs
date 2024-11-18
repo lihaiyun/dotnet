@@ -15,7 +15,7 @@ namespace LearningAPI.Controllers
 
         [HttpPost("upload"), Authorize]
         [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
-        public IActionResult Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace LearningAPI.Controllers
                 var filename = id + Path.GetExtension(file.FileName);
                 var imagePath = Path.Combine(_environment.ContentRootPath, @"wwwroot/uploads", filename);
                 using var fileStream = new FileStream(imagePath, FileMode.Create);
-                file.CopyTo(fileStream);
+                await file.CopyToAsync(fileStream);
                 UploadResponse response = new() { Filename = filename };
                 return Ok(response);
             }

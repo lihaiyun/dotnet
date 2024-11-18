@@ -2,6 +2,7 @@
 using LearningAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,7 +16,7 @@ namespace LearningAPI.Controllers
         ILogger<UserController> logger) : ControllerBase
     {
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
             try
             {
@@ -25,7 +26,7 @@ namespace LearningAPI.Controllers
                 request.Password = request.Password.Trim();
 
                 // Check email
-                var foundUser = context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                var foundUser = await context.Users.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
                 if (foundUser != null)
                 {
                     string message = "Email already exists.";
@@ -45,8 +46,8 @@ namespace LearningAPI.Controllers
                 };
 
                 // Add user
-                context.Users.Add(user);
-                context.SaveChanges();
+                await context.Users.AddAsync(user);
+                await context.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception ex)
@@ -58,7 +59,7 @@ namespace LearningAPI.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
             try
             {
@@ -68,7 +69,7 @@ namespace LearningAPI.Controllers
 
                 // Check email and password
                 string message = "Email or password is not correct.";
-                var foundUser = context.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                var foundUser = await context.Users.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
                 if (foundUser == null)
                 {
                     return BadRequest(new { message });
