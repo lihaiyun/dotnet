@@ -42,7 +42,7 @@ namespace LearningAPI.Controllers
         public IActionResult GetTutorial(int id)
         {
             Tutorial? tutorial = _context.Tutorials.Include(t => t.User)
-                .FirstOrDefault(t => t.Id == id);
+                .SingleOrDefault(t => t.Id == id);
             if (tutorial == null)
             {
                 return NotFound();
