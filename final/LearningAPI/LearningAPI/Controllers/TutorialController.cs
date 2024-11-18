@@ -25,7 +25,7 @@ namespace LearningAPI.Controllers
                         || x.Description.Contains(search));
                 }
                 var list = await result.OrderByDescending(x => x.CreatedAt).ToListAsync();
-                IEnumerable<TutorialDTO> data = list.Select(t => mapper.Map<TutorialDTO>(t));
+                IEnumerable<TutorialDTO> data = list.Select(mapper.Map<TutorialDTO>);
                 return Ok(data);
             }
             catch (Exception ex)
