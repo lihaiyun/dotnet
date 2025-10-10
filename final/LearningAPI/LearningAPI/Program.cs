@@ -15,7 +15,7 @@ builder.Services.AddDbContext<MyDbContext>();
 var mappingConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
-});
+}, loggerFactory: null);
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
