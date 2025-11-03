@@ -12,11 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<MyDbContext>();
 
 // Auto Mapper
-var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
 var mappingConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
-}, loggerFactory);
+});
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
